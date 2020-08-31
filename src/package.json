@@ -1,0 +1,22 @@
+{
+  "name": "fsu_cop4170",
+  "version": "1.0.0",
+  "description": "fsu database group proj.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samanderson4830/fsu_COP4170.git"
+  },
+  "author": "sam a, luis c, dakota s",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samanderson4830/fsu_COP4170/issues"
+  },
+  "homepage": "https://github.com/samanderson4830/fsu_COP4170#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
