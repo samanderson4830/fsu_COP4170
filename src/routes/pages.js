@@ -8,15 +8,15 @@ const router = express.Router();
 // pages in use                               *
 //*********************************************/
 router.get('/', (req, res) => {
-    res.render('../src/views/index');
+    res.render('index');
 });
 
 router.get('/login', (req, res) => {
-    res.render('../src/views/login');
+    res.render('login');
 });
   
 router.get('/register', (req, res) => {
-    res.render('../src/views/register');
+    res.render('register');
 });
 
 // exports
