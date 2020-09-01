@@ -45,7 +45,8 @@ app.use('/auth', require(path.join(__dirname, 'routes', 'auth')));
 app.use('/', require(path.join(__dirname, 'routes', 'pages')));
 
 //*********************************************/
+const port = process.env.PORT_NUMBER;
 
-app.listen(3331, () => {
-    console.log('Server started on port ' + 3331);
+app.listen(port, () => {
+    console.log('Server started on port ' + port);
 });
