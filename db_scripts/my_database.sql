@@ -1,5 +1,5 @@
-DROP SCHEMA IF EXISTS my_db;
-CREATE SCHEMA my_db;
+DROP SCHEMA IF EXISTS My_Database;
+CREATE SCHEMA My_Database;
 USE `My_Database`;
 
 DROP TABLE IF EXISTS `users`;
