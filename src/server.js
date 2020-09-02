@@ -11,7 +11,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 dotenv.config({ path: '../src/.env' });
-const db = require('../src/model/db_connection');
+const db = require('./model/db_connection');
 
 //*********************************************/
 app.set('view engine', 'hbs');
