@@ -1,4 +1,4 @@
-nav {
+/* nav {
     background-color: salmon;
     padding: 30px 60px;
     display: flex;
@@ -26,4 +26,14 @@ nav li a {
 nav li a:hover {
     color: lightslategray;
     text-decoration: none;  
+} */
+
+.navbar-nav {
+    width: 90%;
+    
 }
+
+/* .navbar-nav .nav-link {
+    margin-right: 8px;
+    margin-left: 8px;
+} */
