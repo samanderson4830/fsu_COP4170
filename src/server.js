@@ -6,6 +6,7 @@ const path         = require('path');
 const dotenv       = require('dotenv');
 const bodyParser   = require('body-parser');
 const cookieParser = require('cookie-parser');
+const hbs          = require('hbs');
 
 //*********************************************/
 const app = express();
@@ -15,6 +16,7 @@ const db = require('./model/db_connection');
 
 //*********************************************/
 app.set('view engine', 'hbs');
+hbs.registerPartials('../src/views/partials');
 
 // Serves static files 
 app.use(express.static(path.join(__dirname, 'public')));
