@@ -2,6 +2,7 @@
 // modules used                               *
 //*********************************************/
 const express = require('express');
+const product = require('../seed/product_seeder')
 const router = express.Router();
 
 //*********************************************/
@@ -20,13 +21,17 @@ router.get('/register', (req, res) => {
 });
 
 router.get('/menu', (req, res) => {
-    res.render('menu', { title: 'Menu Page' });
+    products = product.get_products();
+    res.render('menu', { title: 'Menu Page', products: products });
 });
 
 router.get('/about', (req, res) => {
     res.render('about', { title: 'About Page' });
 });
 
+router.get('/cart', (req, res) => {
+    res.render('cart', { title: 'Shopping Cart' });
+});
 
 
 // exports
