@@ -7,6 +7,7 @@ const dotenv       = require('dotenv');
 const bodyParser   = require('body-parser');
 const cookieParser = require('cookie-parser');
 const hbs          = require('hbs');
+const expressHbs   = require('express-handlebars');
 
 //*********************************************/
 const app = express();
@@ -16,6 +17,7 @@ const db = require('./model/db_connection');
 
 //*********************************************/
 app.set('view engine', 'hbs');
+app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}));
 hbs.registerPartials('../src/views/partials');
 
 // Serves static files 
@@ -47,7 +49,8 @@ app.use('/auth', require(path.join(__dirname, 'routes', 'auth')));
 app.use('/', require(path.join(__dirname, 'routes', 'pages')));
 
 //*********************************************/
-const port = process.env.PORT_NUMBER;
+// set port 
+const port = process.env.PORT_NUMBER || 3000;
 
 app.listen(port, () => {
     console.log('Server started on port ' + port);

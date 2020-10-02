@@ -1,75 +1,36 @@
-{{> header}}
-    {{!-- All you have to include is the title, closing head tag. and opening body tag --}}
-    {{!-- The header and footer files have the rest of the content --}}
-    <title>Register Page</title>
-</head>
-
-<body>
-
-    <nav class="navbar navbar-expand-md navbar-dark" style="background-color:salmon">
-        <div class="container">
-            <a href="/" class="navbar-brand h4 m-0 p-3" >Place Holder</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav p-3 justify-content-start">
-                    <li class="nav-item mr-1">
-                        <a href="/" class="nav-link text-light">Home</a>
-                    </li>
-                    <li class="nav-item mx-1">
-                        <a href="/" class="nav-link text-light">About</a>
-                    </li>
-                    <li class="nav-item mx-1">
-                        <a href="/" class="nav-link text-light">Menu</a>
-                    </li>
-                    <li class="nav-item mx-1">
-                        <a href="/" class="nav-link text-light">Reserve Now</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav p-3 justify-content-end">
-                    <li class="nav-item mx-1">
-                        <a href="/login" class="nav-link text-light">Login</a>
-                    </li>
-                    <li class="nav-item ml-1">
-                        <a href="/register" class="nav-link text-light">Register</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+{{!-- All you have to include is the title, closing head tag. and opening body tag --}}
+{{!-- The header and footer files have the rest of the content --}}
 <div class="container mt-4">
     <div class="card">
-             <div class="card-header">Register From</div>
         <div class="card-body">
             <form action="/auth/register" method="POST">
 
                 <div class="form-group">
                     <label for="email">Email address</label>
-                    <input type="email" placeholder ="email" class="form-control" id="email" name="email">
+                    <input type="email" placeholder="email" class="form-control" id="email" name="email">
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" placeholder ="password" class="form-control" id="password" name="password">
+                    <input type="password" placeholder="password" class="form-control" id="password" name="password">
                 </div>
 
                 <div class="form-group">
                     <label for="passwordConfirm">Confirm Password</label>
-                    <input type="password"  placeholder ="confirm password" class="form-control" id="passwordConfirm" name="passwordConfirm">
+                    <input type="password" placeholder="confirm password" class="form-control" id="passwordConfirm"
+                        name="passwordConfirm">
                 </div>
 
                 <div class="form-group">
                     <label for="phoneNumber">Phone Number</label>
-                    <input type="tel" placeholder="phone number" class="form-control" id="phoneNumber" name="phoneNumber">
+                    <input type="tel" placeholder="phone number" class="form-control" id="phoneNumber"
+                        name="phoneNumber">
                 </div>
 
                 <div class="form-group">
                     <label for="address">Address</label>
                     <input type="text" placeholder="address" class="form-control" id="address" name="address">
                 </div>
-
 
                 <button type="submit" class="btn btn-primary">Submit</button>
 
@@ -78,9 +39,7 @@
     </div>
 
     {{#if message}}
-        <h4 class="alert alert-danger mt-4">{{message}}</h4class="alert">
-    {{/if }}
+    <h4 class="alert alert-danger mt-4">{{message}}</h4class="alert">
+        {{/if }}
 
 </div>
-    
-{{> footer}}

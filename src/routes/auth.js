@@ -2,6 +2,7 @@
 // modules used                               *
 //*********************************************/
 const express = require('express');
+
 const register_controller = require('../controllers/register_controller');
 const login_controller = require('../controllers/login_controller');
 
