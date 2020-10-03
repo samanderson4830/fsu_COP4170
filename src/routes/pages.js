@@ -34,5 +34,11 @@ router.get('/cart', (req, res) => {
 });
 
 
+router.get('/forgot', (req, res) => {
+    res.render('forgot', { title: 'Forgot Password' });
+});
+
+
+
 // exports
 module.exports = router;
