@@ -1,0 +1,52 @@
+{{!-- All you have to include is the title, closing head tag. and opening body tag --}}
+{{!-- The header and footer files have the rest of the content --}}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <form action="/auth/register" method="POST">
+
+                <div class="form-group">
+                    <label for="email">New Email address</label>
+                    <input type="email" placeholder="email" class="form-control" id="email" name="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="emailConfirm">Confirm New Email</label>
+                    <input type="password" placeholder="confirm email" class="form-control" id="emailConfirm"
+                        name="emailConfirm">
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneNumber">New Phone Number</label>
+                    <input type="tel" placeholder="phone number" class="form-control" id="phoneNumber" name="phoneNumber">
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneConfirm">Confirm New Phone Number</label>
+                    <input type="tel" placeholder="confirm phone number" class="form-control" id="phoneConfirm"
+                        name="phoneConfirm">
+                </div>
+
+
+                <div class="form-group">
+                    <label for="address">New Address</label>
+                    <input type="text" placeholder="address" class="form-control" id="address" name="address">
+                </div>
+
+                <div class="form-group">
+                    <label for="addressConfirm">Confirm New Address</label>
+                    <input type="password" placeholder="confirm address" class="form-control" id="addressConfirm"
+                        name="addressConfirm">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Update</button>
+                
+            </form>
+        </div>
+    </div>
+
+    {{#if message}}
+    <h4 class="alert alert-danger mt-4">{{message}}</h4class="alert">
+        {{/if }}
+
+</div>

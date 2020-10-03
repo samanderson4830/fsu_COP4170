@@ -34,10 +34,17 @@ router.get('/cart', (req, res) => {
 });
 
 
-router.get('/forgot', (req, res) => {
+router.get('/forgot-password', (req, res) => {
     res.render('forgot', { title: 'Forgot Password' });
 });
 
+router.get('/account-manager', (req, res) => {
+    res.render('manage_accout', { title: 'Account Manager' });
+});
+
+router.get('/edit-account-info', (req, res) => {
+    res.render('edit_account', { title: 'Edit Account Info' });
+});
 
 
 // exports
