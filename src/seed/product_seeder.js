@@ -7,7 +7,7 @@ const db = require('../model/db_connection');
 var mytotal = 0;
 const total_products = () => {
 
-    sql = 'call My_Database.NumberOfProducts(@total);'
+    var sql = 'call My_Database.NumberOfProducts(@total);'
     db.start.query(sql, (err, results) => {
 
         if (err) {
@@ -17,6 +17,7 @@ const total_products = () => {
         } else {
 
             mytotal = results[0][0].total;
+            // log value for debuging
             console.log(">>>>>results: " + results[0][0].total);
 
         }
@@ -25,14 +26,14 @@ const total_products = () => {
     return mytotal;
 }
 
-const get_products = (req, res) => {
+const get_products = () => {
 
     // variables
-    let products = new Array;
+    var products = new Array;
     var total = total_products();
     console.log ("Product total is : " + total);
 
-    let sql = "call My_Database.GetProduct()";
+    var sql = "call My_Database.GetProduct()";
     db.start.query(sql, async (err, results) => {
 
         if (err) {
@@ -42,7 +43,7 @@ const get_products = (req, res) => {
         } else {
 
             // populate the prodcuts array with database      
-            for (let inx = 0; inx < total; inx++) {
+            for (var inx = 0; inx < total; ++inx) {
         
                 products.push({
                     product_name: results[0][inx].product_name,
@@ -50,7 +51,7 @@ const get_products = (req, res) => {
                     price: results[0][inx].price
                 });
 
-                // display values
+                // display values for debuging 
                 console.log("Product ID:          " + results[0][inx].product_ID);
                 console.log("Product Name:        " + results[0][inx].product_name);
                 console.log("Product Description: " + results[0][inx].product_description);
