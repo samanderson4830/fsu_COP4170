@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS `My_Database`.`users`
   UNIQUE INDEX `user_ID_UNIQUE` (`user_ID` ASC)
 )ENGINE = InnoDB;
 
+DROP TABLE IF EXISTS `products`;
+
 CREATE TABLE IF NOT EXISTS `My_Database`.`products` 
 (
   `product_ID`         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
@@ -81,4 +83,37 @@ END $$
 
 DELIMITER ;
 
+/*-----------------------------------------------------------------------------*/
+# get number of products
+
+DROP PROCEDURE IF EXISTS `NumberOfProducts`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `NumberOfProducts`(OUT total INT)
+BEGIN
+	SET total = My_Database.TotalProducts();
+    SELECT total;
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+
+DROP FUNCTION IF EXISTS `TotalProducts`;
+
+#*********************************************
+# Helper function for total num of prodcuts  *
+#*********************************************
+
+DELIMITER $$
+CREATE FUNCTION `TotalProducts` () RETURNS INT DETERMINISTIC
+BEGIN
+	DECLARE total INT DEFAULT 0;
+    
+	SELECT COUNT(product_ID) INTO total 
+    FROM products;
+    
+	RETURN total;
+END $$
 

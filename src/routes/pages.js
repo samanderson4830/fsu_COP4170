@@ -21,8 +21,8 @@ router.get('/register', (req, res) => {
 });
 
 router.get('/menu', (req, res) => {
-    products = product.get_products();
-    res.render('menu', { title: 'Menu Page', products: products });
+    //products = product.get_products();
+    res.render('menu', { title: 'Menu Page', products: product.get_products() });
 });
 
 router.get('/about', (req, res) => {
