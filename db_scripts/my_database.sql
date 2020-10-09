@@ -42,7 +42,7 @@ CREATE PROCEDURE `AddUser`(IN inputEmail VARCHAR(100),
                            IN inputAddress VARCHAR (100))
 BEGIN
 	
-   INSERT INTO `My_Database`.`users` ( `email`, `user_password`, `phone_number`, `quantity`) 
+   INSERT INTO `My_Database`.`users` ( `email`, `user_password`, `phone_number`, `address`) 
    VALUES ( inputEmail, inputPassword, inputPhoneNumber, inputAddress) ;
       
 END $$
@@ -82,6 +82,26 @@ BEGIN
 END $$
 
 DELIMITER ;
+/*-----------------------------------------------------------------------------*/
+# get products
+
+DROP PROCEDURE IF EXISTS `ChangeEmail`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `ChangeEmail`(IN inputEmail VARCHAR(100), IN oldEmail VARCHAR(100) )
+BEGIN
+	# turn off safe update mode
+	SET SQL_SAFE_UPDATES = 0;
+    
+	UPDATE `users`
+	SET email = inputEmail
+	WHERE oldEmail = email;
+    
+END $$
+
+DELIMITER ;
+
 
 /*-----------------------------------------------------------------------------*/
 # get number of products
