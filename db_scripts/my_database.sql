@@ -1,22 +1,24 @@
-DROP SCHEMA IF EXISTS my_db;
-CREATE SCHEMA my_db;
+DROP SCHEMA IF EXISTS My_Database;
+CREATE SCHEMA My_Database;
 USE `My_Database`;
 
 DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `products`;
+DROP TABLE IF EXISTS `cart`;
+
+# customer/user information Table
 
 CREATE TABLE IF NOT EXISTS `My_Database`.`users` 
 (
-  `user_ID`       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   `email`         VARCHAR(100) NOT NULL,
   `user_password` VARCHAR(500) NOT NULL,
   `address`       VARCHAR(100) NOT NULL,
   `phone_number`  VARCHAR(40),
   `date_time`     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP, 
-  PRIMARY KEY (`user_ID`),
-  UNIQUE INDEX `user_ID_UNIQUE` (`user_ID` ASC)
+  PRIMARY KEY (`email`)
 )ENGINE = InnoDB;
 
-DROP TABLE IF EXISTS `products`;
+# all products 
 
 CREATE TABLE IF NOT EXISTS `My_Database`.`products` 
 (
@@ -25,8 +27,34 @@ CREATE TABLE IF NOT EXISTS `My_Database`.`products`
   `product_description`VARCHAR(500) NOT NULL,
   `price`              FLOAT NOT NULL,
   `quantity`           INT NOT NULL,
-  PRIMARY KEY (`product_ID`),
-  UNIQUE INDEX `product_ID_UNIQUE` (`product_ID` ASC)
+  PRIMARY KEY (`product_ID`)
+)ENGINE = InnoDB;
+
+# Table for who cart belongs to 
+
+CREATE TABLE IF NOT EXISTS `My_Database`.`cart` 
+(
+  `cart_ID`       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+  `email`         VARCHAR(100) NOT NULL,
+  `date_time`     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP, 
+  PRIMARY KEY (`cart_ID`),
+  KEY `user_email_fk` (`email`),
+  CONSTRAINT `user_email_fk` FOREIGN KEY (`email`) REFERENCES users (`email`) ON UPDATE CASCADE
+)ENGINE = InnoDB;
+
+# Table for items found in cart
+
+CREATE TABLE IF NOT EXISTS `My_Database`.`cart_has` 
+(
+  `cart_ID`       BIGINT UNSIGNED NOT NULL,
+  `product_ID`    BIGINT UNSIGNED NOT NULL,
+  `amount`        INT,
+  `date_time`     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP, 
+  PRIMARY KEY (`cart_ID`,`product_ID`)  ,
+  KEY `carts_product_fk` (`product_ID`),
+  KEY `carts_id_fk` (`cart_ID`),
+  CONSTRAINT `carts_product_fk` FOREIGN KEY (`product_ID`) REFERENCES products (`product_ID`) ON UPDATE CASCADE,
+  CONSTRAINT `carts_id_fk` FOREIGN KEY (`cart_ID`) REFERENCES cart(`cart_ID`) ON UPDATE CASCADE 
 )ENGINE = InnoDB;
 
 /*-----------------------------------------------------------------------------*/
@@ -68,6 +96,22 @@ BEGIN
 END $$
 
 DELIMITER ;
+/*-----------------------------------------------------------------------------*/
+
+DROP PROCEDURE IF EXISTS `GetUserInfo`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `GetUserInfo`(IN inputEmail VARCHAR(100))
+BEGIN
+	
+	SELECT `email`, `address`, `phone_number` 
+    FROM `users`
+    WHERE email = `inputEmail`;
+      
+END $$
+
+DELIMITER ;
 
 /*-----------------------------------------------------------------------------*/
 # get products
@@ -78,30 +122,41 @@ DELIMITER $$
 USE `My_Database`$$
 CREATE PROCEDURE `GetProduct`()
 BEGIN
-	SELECT * FROM `products` ;     
+
+	SELECT * FROM `products`; 
+    
 END $$
 
 DELIMITER ;
-/*-----------------------------------------------------------------------------*/
-# get products
 
-DROP PROCEDURE IF EXISTS `ChangeEmail`;
+DROP PROCEDURE IF EXISTS `GetProduct`;
 
 DELIMITER $$
 USE `My_Database`$$
-CREATE PROCEDURE `ChangeEmail`(IN inputEmail VARCHAR(100), IN oldEmail VARCHAR(100) )
+CREATE PROCEDURE `GetProduct`()
 BEGIN
-	# turn off safe update mode
-	SET SQL_SAFE_UPDATES = 0;
-    
-	UPDATE `users`
-	SET email = inputEmail
-	WHERE oldEmail = email;
+
+	SELECT * FROM `products`; 
     
 END $$
 
 DELIMITER ;
 
+/*-----------------------------------------------------------------------------*/
+
+DROP PROCEDURE IF EXISTS `AddToCart`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `AddToCart`(IN inProductID BIGINT UNSIGNED, IN inCartID BIGINT UNSIGNED, IN inputAmount INT)
+BEGIN
+
+	INSERT INTO `My_Database`.`cart_has` (`cart_ID`,`product_ID`, `amount`) 
+	VALUES (inCartID, inProductID, inputAmount);
+    
+END $$
+
+DELIMITER ;
 
 /*-----------------------------------------------------------------------------*/
 # get number of products
@@ -112,8 +167,44 @@ DELIMITER $$
 USE `My_Database`$$
 CREATE PROCEDURE `NumberOfProducts`(OUT total INT)
 BEGIN
+
 	SET total = My_Database.TotalProducts();
     SELECT total;
+    
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+# get number of products
+
+DROP PROCEDURE IF EXISTS `ProductQuantity`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `ProductQuantity`(IN inputID BIGINT UNSIGNED)
+BEGIN
+	
+    SELECT quantity
+    FROM products
+    WHERE product_ID = inputID;
+    
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+
+DROP PROCEDURE IF EXISTS `MakeCart`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `MakeCart`(IN inputEmail VARCHAR(100))
+BEGIN
+
+   INSERT INTO `My_Database`.`cart` (`email`) 
+   VALUES (inputEmail);
+      
 END $$
 
 DELIMITER ;
@@ -129,11 +220,13 @@ DROP FUNCTION IF EXISTS `TotalProducts`;
 DELIMITER $$
 CREATE FUNCTION `TotalProducts` () RETURNS INT DETERMINISTIC
 BEGIN
+
 	DECLARE total INT DEFAULT 0;
     
 	SELECT COUNT(product_ID) INTO total 
     FROM products;
     
 	RETURN total;
+    
 END $$
 
