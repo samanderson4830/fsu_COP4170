@@ -51,14 +51,15 @@ exports.register = (req, res) => {
         });
 
         //*********************************************/
-        let hashedPhoneNumber = cryptoJS.AES.encrypt(phoneNumber, process.env.CRYPTO_SECRET_KEY).toString();
-        let hashedAddress = cryptoJS.AES.encrypt(address, process.env.CRYPTO_SECRET_KEY).toString();
-        let hashedPassword = await bcrypt.hash(password, 8);
+        // removing hashing temporarly
+        // let hashedPhoneNumber = cryptoJS.AES.encrypt(phoneNumber, process.env.CRYPTO_SECRET_KEY).toString();
+        // let hashedAddress = cryptoJS.AES.encrypt(address, process.env.CRYPTO_SECRET_KEY).toString();
+        // let hashedPassword = await bcrypt.hash(password, 8);
    
 
         // adding a new user
         sql = "call My_Database.AddUser(?, ?, ?, ?)";
-        db.start.query(sql, [email, hashedPassword, hashedPhoneNumber, hashedAddress], (error, results) => {
+        db.start.query(sql, [email, password, phoneNumber, address], (error, results) => {
 
             if (error) {
 

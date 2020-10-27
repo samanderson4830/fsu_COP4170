@@ -23,10 +23,11 @@ exports.login = async (req, res) => {
         db.start.query(sql, [login_email], async (error, results) => {
 
             console.log(results);
-
-            const match = await bcrypt.compare(login_password, results[0].user_password);
-
-            if (!results || !match) {
+            // temporaly removing hashing 
+            // const match = await bcrypt.compare(login_password, results[0].user_password);
+            // if (!results || !match)
+            
+            if (login_password != results[0].user_password) {
 
                 return res.status(401).render('login', { message: 'Email or password is wrong' });
 
