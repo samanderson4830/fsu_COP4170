@@ -14,14 +14,18 @@ call My_Database.AddProduct('Product 5', 'This is a product description', 20.99,
 call My_Database.AddProduct('Product 6', 'This is a product description', 9.99,  10);
 
 # make a cart
-call My_Database.MakeCart('test@test.com');
+call My_Database.MakeCart(1);
 
 # add product to cart (cartID , productID, amount)
 call My_Database.AddToCart(1, 1, 4);
 
 # add avaliable days YYYY-MM-DD
-call My_Database.AddDay('2000-11-11', 10);
+call My_Database.AddDay('2000-11-01', 10);
+call My_Database.AddDay('2000-11-02', 10);
+call My_Database.AddDay('2000-11-03', 10);
+call My_Database.AddDay('2000-11-04', 10);
+call My_Database.AddDay('2000-11-05', 10);
 
 # add an order
-call My_Database.AddOrder('2000-11-11', 12.12);
+call My_Database.AddOrder('2000-11-01', 12.12);
 
