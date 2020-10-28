@@ -5,14 +5,15 @@ const cryptoJS = require("crypto-js");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../model/db_connection');
-
+const user = require('../seed/user_seeder')
 //*********************************************/
+
 exports.login = async (req, res) => {
 
     try {
         console.log(req.body);
         const { login_email, login_password } = req.body;
-
+        
         // check if login feilds are left empty
         if (!login_email || !login_password) {
 
@@ -48,7 +49,7 @@ exports.login = async (req, res) => {
                 res.status(200).redirect('/');
             }
         });
-
+        
     } catch (error) {
 
         console.log(error);

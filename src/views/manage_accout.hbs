@@ -7,8 +7,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-img">
-                    <img src="https://cdn.pixabay.com/photo/2016/08/31/11/55/user-1633250_960_720.png"
-                        alt="..." />
+                    <img src="https://cdn.pixabay.com/photo/2016/08/31/11/55/user-1633250_960_720.png" alt="..." />
                 </div>
             </div>
             <div class="col-md-6">
@@ -30,7 +29,7 @@
                 </div>
             </div>
             <div class="col-md-2">
-                 <p>Change Info <a href="/edit-account-info">edit</a></p>
+                <p>Change Info <a href="/edit-account-info">edit</a></p>
             </div>
         </div>
         <div class="row">
@@ -40,21 +39,13 @@
             <div class="col-md-8">
                 <div class="tab-content profile-tab" id="myTabContent">
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Name</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>John Doe</p>
-                            </div>
-                        </div>
+                        {{#each user }}
                         <div class="row">
                             <div class="col-md-6">
                                 <label>Email</label>
                             </div>
                             <div class="col-md-6">
-                                <p>johndoe@gmail.com</p>
+                                <p>{{ email }}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -62,7 +53,7 @@
                                 <label>Phone</label>
                             </div>
                             <div class="col-md-6">
-                                <p>123 456 7890</p>
+                                <p>{{ phone_number }}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -70,10 +61,11 @@
                                 <label>Address</label>
                             </div>
                             <div class="col-md-6">
-                                <p>600 W College Ave, Tallahassee, FL 32306</p>
+                                <p>{{ address }}</p>
                             </div>
                         </div>
                     </div>
+                    {{/each}}
                     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                         <div class="row">
                             <div class="col-md-6">

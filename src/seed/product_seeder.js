@@ -7,7 +7,7 @@ const db = require('../model/db_connection');
 var mytotal = 0;
 const total_products = () => {
 
-    var sql = 'call My_Database.NumberOfProducts(@total);'
+    var sql = 'call My_Database.NumberOfProducts(@total);';
     db.start.query(sql, (err, results) => {
 
         if (err) {
