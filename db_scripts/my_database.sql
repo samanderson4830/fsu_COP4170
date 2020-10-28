@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS `day_avaliable`;
 # customer/user information Table
 CREATE TABLE IF NOT EXISTS `My_Database`.`users` 
 (
+  `user_ID`       INT NOT NULL AUTO_INCREMENT UNIQUE,
   `email`         VARCHAR(100) NOT NULL,
   `user_password` VARCHAR(500) NOT NULL,
   `address`       VARCHAR(100) NOT NULL,
@@ -26,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `My_Database`.`users`
 # admin table
 CREATE TABLE IF NOT EXISTS `My_Database`.`admin` 
 (
+  `user_ID`       INT NOT NULL AUTO_INCREMENT UNIQUE,
   `email`         VARCHAR(100) NOT NULL,
   `user_password` VARCHAR(500) NOT NULL,
   `address`       VARCHAR(100) NOT NULL,
@@ -41,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `My_Database`.`admin`
 # all products 
 CREATE TABLE IF NOT EXISTS `My_Database`.`products` 
 (
-  `product_ID`         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+  `product_ID`         INT NOT NULL AUTO_INCREMENT UNIQUE,
   `product_name`       VARCHAR(50) NOT NULL,
   `product_description`VARCHAR(500) NOT NULL,
   `price`              FLOAT NOT NULL,
@@ -52,19 +54,19 @@ CREATE TABLE IF NOT EXISTS `My_Database`.`products`
 # Table for who cart belongs to 
 CREATE TABLE IF NOT EXISTS `My_Database`.`cart` 
 (
-  `cart_ID`       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
-  `email`         VARCHAR(100) NOT NULL,
+  `cart_ID`       INT NOT NULL AUTO_INCREMENT UNIQUE,
+  `user_ID`       INT NOT NULL,
   `date_time`     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP, 
-  PRIMARY KEY (`cart_ID`),
-  KEY `user_email_fk` (`email`),
-  CONSTRAINT `user_email_fk` FOREIGN KEY (`email`) REFERENCES users (`email`) ON UPDATE CASCADE
+  PRIMARY KEY (`cart_ID`,`user_ID`),
+  KEY `user_ID_fk` (`user_ID`),
+  CONSTRAINT `user_ID_fk` FOREIGN KEY (`user_ID`) REFERENCES users (`user_ID`) ON UPDATE CASCADE
 )ENGINE = InnoDB;
 
 # Table for items found in cart
 CREATE TABLE IF NOT EXISTS `My_Database`.`cart_has` 
 (
-  `cart_ID`       BIGINT UNSIGNED NOT NULL,
-  `product_ID`    BIGINT UNSIGNED NOT NULL,
+  `cart_ID`       INT NOT NULL,
+  `product_ID`    INT NOT NULL,
   `amount`        INT,
   `date_time`     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP, 
   PRIMARY KEY (`cart_ID`,`product_ID`)  ,
@@ -85,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `My_Database`.`day_avaliable`
 # all orders, their status, and cost
 CREATE TABLE IF NOT EXISTS `My_Database`.`orders` 
 (
-  `order_ID`       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+  `order_ID`       INT NOT NULL AUTO_INCREMENT UNIQUE,
   `total_cost`     FLOAT NOT NULL,
   `is_active`      BOOL NOT NULL,
   `date_time`      DATE NOT NULL, 
@@ -97,12 +99,12 @@ CREATE TABLE IF NOT EXISTS `My_Database`.`orders`
 # who placed an order
 CREATE TABLE IF NOT EXISTS `My_Database`.`placed_order` 
 (
-  `order_ID`       BIGINT UNSIGNED NOT NULL,
-  `email`          VARCHAR(100) NOT NULL, 
-  PRIMARY KEY (`order_ID`,`email`),
+  `order_ID`       INT NOT NULL,
+  `user_ID`        INT NOT NULL, 
+  PRIMARY KEY (`order_ID`,`user_ID`),
   KEY `order_ID_fk` (`order_ID`),
-  KEY `email_fk` (`email`),
-  CONSTRAINT `email_fk` FOREIGN KEY (`email`) REFERENCES users (`email`) ON UPDATE CASCADE,
+  KEY `user_fk` (`user_ID`),
+  CONSTRAINT `user_fk` FOREIGN KEY (`user_ID`) REFERENCES users (`user_ID`) ON UPDATE CASCADE,
   CONSTRAINT `order_ID_fk` FOREIGN KEY (`order_ID`) REFERENCES orders(`order_ID`) ON UPDATE CASCADE 
 )ENGINE = InnoDB;
 
@@ -125,6 +127,7 @@ BEGIN
 END $$
 
 DELIMITER ;
+
 /*-----------------------------------------------------------------------------*/
 # create a admin user
 DROP PROCEDURE IF EXISTS `AddAdmin`;
@@ -175,7 +178,7 @@ USE `My_Database`$$
 CREATE PROCEDURE `GetUserInfo`(IN inputEmail VARCHAR(100))
 BEGIN
 	
-	SELECT `email`, `address`, `phone_number` 
+	SELECT `user_ID`,`email`, `address`, `phone_number` 
     FROM `users`
     WHERE email = `inputEmail`;
       
@@ -199,25 +202,11 @@ END $$
 DELIMITER ;
 
 /*-----------------------------------------------------------------------------*/
-DROP PROCEDURE IF EXISTS `GetProduct`;
-
-DELIMITER $$
-USE `My_Database`$$
-CREATE PROCEDURE `GetProduct`()
-BEGIN
-
-	SELECT * FROM `products`; 
-    
-END $$
-
-DELIMITER ;
-
-/*-----------------------------------------------------------------------------*/
 DROP PROCEDURE IF EXISTS `AddToCart`;
 
 DELIMITER $$
 USE `My_Database`$$
-CREATE PROCEDURE `AddToCart`(IN inProductID BIGINT UNSIGNED, IN inCartID BIGINT UNSIGNED, IN inputAmount INT)
+CREATE PROCEDURE `AddToCart`(IN inProductID INT, IN inCartID INT, IN inputAmount INT)
 BEGIN
 
 	INSERT INTO `My_Database`.`cart_has` (`cart_ID`,`product_ID`, `amount`) 
@@ -249,7 +238,7 @@ DROP PROCEDURE IF EXISTS `ProductQuantity`;
 
 DELIMITER $$
 USE `My_Database`$$
-CREATE PROCEDURE `ProductQuantity`(IN inputID BIGINT UNSIGNED)
+CREATE PROCEDURE `ProductQuantity`(IN inputID INT)
 BEGIN
 	
     SELECT quantity
@@ -265,11 +254,11 @@ DROP PROCEDURE IF EXISTS `MakeCart`;
 
 DELIMITER $$
 USE `My_Database`$$
-CREATE PROCEDURE `MakeCart`(IN inputEmail VARCHAR(100))
+CREATE PROCEDURE `MakeCart`(IN inputUserID INT)
 BEGIN
 
-   INSERT INTO `My_Database`.`cart` (`email`) 
-   VALUES (inputEmail);
+   INSERT INTO `My_Database`.`cart` (`user_ID`) 
+   VALUES (inputUserID);
       
 END $$
 
@@ -289,6 +278,7 @@ BEGIN
 END $$
 
 DELIMITER ;
+
 /*-----------------------------------------------------------------------------*/
 DROP PROCEDURE IF EXISTS `AddOrder`;
 
@@ -303,7 +293,6 @@ BEGIN
 END $$
 
 DELIMITER ;
-
 
 /*-----------------------------------------------------------------------------*/
 DROP FUNCTION IF EXISTS `TotalProducts`;
@@ -324,3 +313,5 @@ BEGIN
 	RETURN total;
     
 END $$
+
+
