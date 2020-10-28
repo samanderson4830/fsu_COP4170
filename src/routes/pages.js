@@ -4,6 +4,7 @@
 const express = require('express');
 const product = require('../seed/product_seeder');
 const user = require('../seed/user_seeder')
+const orders = require('../seed/orders_seeder');
 const router = express.Router();
 
 //*********************************************/
@@ -38,7 +39,10 @@ router.get('/forgot-password', (req, res) => {
 });
 
 router.get('/account-manager', (req, res) => {
-    res.render('manage_accout', { title: 'Account Manager', user: user.get_user_info('test@test.com') });
+    res.render('manage_accout', { title: 'Account Manager', 
+                                  user: user.get_user_info('test@test.com'), 
+                                  orders: orders.get_orders(1), 
+                                });
 });
 
 router.get('/edit-account-info', (req, res) => {

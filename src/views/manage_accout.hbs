@@ -67,12 +67,13 @@
                     </div>
                     {{/each}}
                     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        {{#each orders }}
                         <div class="row">
                             <div class="col-md-6">
                                 <label>Order Date</label>
                             </div>
                             <div class="col-md-6">
-                                <p>01/01/2000</p>
+                                <p>{{ placed_on }}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -80,7 +81,7 @@
                                 <label>Total Cost</label>
                             </div>
                             <div class="col-md-6">
-                                <p>$21.23</p>
+                                <p>$ {{ total_cost }}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -88,7 +89,7 @@
                                 <label>Status</label>
                             </div>
                             <div class="col-md-6">
-                                <p>Active</p>
+                                <p>{{ is_active }}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -96,10 +97,10 @@
                                 <label>Pick Up Date</label>
                             </div>
                             <div class="col-md-6">
-                                <p>01/03/2000</p>
+                                <p>{{ date_time }}</p>
                             </div>
                         </div>
-
+                        {{/each}}
                     </div>
                 </div>
             </div>

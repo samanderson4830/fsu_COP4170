@@ -35,6 +35,16 @@ exports.login = async (req, res) => {
             } else {
 
                 const id = results[0].user_ID;
+                var sql = "call My_Database.MakeCart(?);";
+                db.start.query(sql, [id], (error, results) => {
+                    if (error) {
+
+                        console.log("Cart not made");
+                    } else {
+
+                        console.log("Cart was made");
+                    }
+                });
                 const token = jwt.sign({ id: id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
                 const cookieOpt = {
@@ -49,7 +59,7 @@ exports.login = async (req, res) => {
                 res.status(200).redirect('/');
             }
         });
-        
+
     } catch (error) {
 
         console.log(error);
