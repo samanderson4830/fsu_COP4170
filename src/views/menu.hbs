@@ -10,7 +10,9 @@
                 <p class="description">{{ product_description }}</p>
                 <div class="clearfix">
                     <div class="price pull-left">$ {{ price }}</div>
-                    <a href="#" class="btn btn-success pull-right" role="button">Add to cart</a>
+                   <a href="/add-to-cart/{{product_ID}}" class="btn btn-raised btn-success pull-right">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add to Cart
+                    </a>
                 </div>
             </div>
         </div>

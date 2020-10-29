@@ -46,6 +46,7 @@ const get_products = () => {
             for (var inx = 0; inx < total; ++inx) {
         
                 products.push({
+                    product_ID: results[0][inx].product_ID,
                     product_name: results[0][inx].product_name,
                     product_description: results[0][inx].product_description,
                     price: results[0][inx].price

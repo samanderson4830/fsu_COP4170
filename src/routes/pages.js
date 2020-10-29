@@ -5,6 +5,7 @@ const express = require('express');
 const product = require('../seed/product_seeder');
 const user = require('../seed/user_seeder')
 const orders = require('../seed/orders_seeder');
+const cart = require('../controllers/cart_controller');
 const router = express.Router();
 
 //*********************************************/
@@ -47,6 +48,13 @@ router.get('/account-manager', (req, res) => {
 
 router.get('/edit-account-info', (req, res) => {
     res.render('edit_account', { title: 'Edit Account Info' });
+});
+
+router.get('/add-to-cart/:id',  (req, res) => {
+
+    var productID = req.params.id;
+    var cartID = 1;
+    cart.add_to_cart (cartID, productID);
 });
 
 

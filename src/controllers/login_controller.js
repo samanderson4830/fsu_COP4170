@@ -5,7 +5,6 @@ const cryptoJS = require("crypto-js");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../model/db_connection');
-const user = require('../seed/user_seeder')
 //*********************************************/
 
 exports.login = async (req, res) => {
@@ -35,7 +34,7 @@ exports.login = async (req, res) => {
             } else {
 
                 const id = results[0].user_ID;
-                var sql = "call My_Database.MakeCart(?);";
+                sql = "call My_Database.MakeCart(?);";
                 db.start.query(sql, [id], (error, results) => {
                     if (error) {
 

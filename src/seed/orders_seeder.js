@@ -25,6 +25,7 @@ function total_orders (id) {
  
     return mytotal;
 }
+
 function get_orders(id) {
 
     var total = total_orders(id);
