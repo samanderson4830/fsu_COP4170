@@ -201,9 +201,13 @@ USE `My_Database`$$
 CREATE PROCEDURE `AddToCart`(IN inProductID INT, IN inCartID INT)
 BEGIN
 	# default amount is 1
-	INSERT INTO `My_Database`.`cart_has` (`cart_ID`,`product_ID`, `amount`) 
-	VALUES (inCartID, inProductID, 1);
-    
+    DECLARE exist BOOL;
+    SET exist = My_Database.AlreadyInCart(inProductID, inCartID);
+   
+    IF exist = FALSE THEN
+		INSERT INTO `My_Database`.`cart_has` (`cart_ID`,`product_ID`, `amount`) 
+		VALUES (inCartID, inProductID, 1);
+    END IF;
 END $$
 
 DELIMITER ;
@@ -387,4 +391,31 @@ BEGIN
 	RETURN total;
     
 END $$
+
+/*-----------------------------------------------------------------------------*/
+DROP FUNCTION IF EXISTS `HasACart`;
+
+#*********************************************
+# Helper function for total num of orders  *
+#*********************************************
+
+DELIMITER $$
+CREATE FUNCTION `AlreadyInCart` (inputProductID  INT, inputCartID INT) RETURNS BOOL DETERMINISTIC
+BEGIN
+
+	DECLARE does_exist BOOL DEFAULT FALSE;
+    DECLARE total INT DEFAULT 0;
+    
+	SELECT COUNT(cart_ID) INTO total 
+    FROM cart_has
+    WHERE cart_ID = inputCartID && product_ID = inputProductID;
+    
+    IF total > 0 THEN
+		SET does_exist = TRUE;
+	END IF;
+    
+	RETURN does_exist;
+    
+END $$
+
 
