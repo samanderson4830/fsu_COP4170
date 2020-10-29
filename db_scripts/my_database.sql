@@ -88,24 +88,16 @@ CREATE TABLE IF NOT EXISTS `My_Database`.`day_avaliable`
 CREATE TABLE IF NOT EXISTS `My_Database`.`orders` 
 (
   `order_ID`       INT NOT NULL AUTO_INCREMENT UNIQUE,
+  `user_ID`        INT NOT NULL, 
   `total_cost`     FLOAT NOT NULL,
   `is_active`      BOOL NOT NULL,
-  `date_time`      DATE NOT NULL, 
+  `date_time`      DATE NOT NULL,   # pick up day 
+  `placed_on`      TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP, 
   PRIMARY KEY (`order_ID`, `date_time`),
   KEY `date_fk` (`date_time`),
-  CONSTRAINT `date_fk` FOREIGN KEY (`date_time`) REFERENCES day_avaliable (`date_time`) ON UPDATE CASCADE
-)ENGINE = InnoDB;
-
-# who placed an order
-CREATE TABLE IF NOT EXISTS `My_Database`.`placed_order` 
-(
-  `order_ID`       INT NOT NULL,
-  `user_ID`        INT NOT NULL, 
-  PRIMARY KEY (`order_ID`,`user_ID`),
-  KEY `order_ID_fk` (`order_ID`),
+  CONSTRAINT `date_fk` FOREIGN KEY (`date_time`) REFERENCES day_avaliable (`date_time`) ON UPDATE CASCADE,
   KEY `user_fk` (`user_ID`),
-  CONSTRAINT `user_fk` FOREIGN KEY (`user_ID`) REFERENCES users (`user_ID`) ON UPDATE CASCADE,
-  CONSTRAINT `order_ID_fk` FOREIGN KEY (`order_ID`) REFERENCES orders(`order_ID`) ON UPDATE CASCADE 
+  CONSTRAINT `user_fk` FOREIGN KEY (`user_ID`) REFERENCES users (`user_ID`) ON UPDATE CASCADE
 )ENGINE = InnoDB;
 
 
@@ -206,11 +198,11 @@ DROP PROCEDURE IF EXISTS `AddToCart`;
 
 DELIMITER $$
 USE `My_Database`$$
-CREATE PROCEDURE `AddToCart`(IN inProductID INT, IN inCartID INT, IN inputAmount INT)
+CREATE PROCEDURE `AddToCart`(IN inProductID INT, IN inCartID INT)
 BEGIN
-
+	# default amount is 1
 	INSERT INTO `My_Database`.`cart_has` (`cart_ID`,`product_ID`, `amount`) 
-	VALUES (inCartID, inProductID, inputAmount);
+	VALUES (inCartID, inProductID, 1);
     
 END $$
 
@@ -226,6 +218,21 @@ CREATE PROCEDURE `NumberOfProducts`(OUT total INT)
 BEGIN
 
 	SET total = My_Database.TotalProducts();
+    SELECT total;
+    
+END $$
+
+DELIMITER ;
+/*-----------------------------------------------------------------------------*/
+# get number of products
+DROP PROCEDURE IF EXISTS `NumberOfOrders`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `NumberOfOrders`(IN inputUserID INT ,OUT total INT)
+BEGIN
+
+	SET total = My_Database.TotalOrders(inputUserID);
     SELECT total;
     
 END $$
@@ -257,8 +264,13 @@ USE `My_Database`$$
 CREATE PROCEDURE `MakeCart`(IN inputUserID INT)
 BEGIN
 
-   INSERT INTO `My_Database`.`cart` (`user_ID`) 
-   VALUES (inputUserID);
+   DECLARE exist BOOL;
+   SET exist = My_Database.HasACart(inputUserID);
+   
+   IF exist = FALSE THEN
+		INSERT INTO `My_Database`.`cart` (`user_ID`) 
+		VALUES (inputUserID);
+   END IF;
       
 END $$
 
@@ -284,15 +296,31 @@ DROP PROCEDURE IF EXISTS `AddOrder`;
 
 DELIMITER $$
 USE `My_Database`$$
-CREATE PROCEDURE `AddOrder`(IN inputDay DATE, IN inputCost FLOAT)
+CREATE PROCEDURE `AddOrder`(IN inputUserID INT, IN inputDay DATE, IN inputCost FLOAT)
 BEGIN
 
-   INSERT INTO `My_Database`.`orders` (`date_time`, `total_cost`, `is_active`) 
-   VALUES (inputDay, inputCost, true);
+   INSERT INTO `My_Database`.`orders` (`user_ID`,`date_time`, `total_cost`, `is_active`) 
+   VALUES (inputUserID,inputDay, inputCost, true);
       
 END $$
 
 DELIMITER ;
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `GetUserOrders`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `GetUserOrders`(IN inID INT)
+BEGIN
+
+	SELECT `total_cost`, `order_ID`, `is_active`, `date_time`, `placed_on`
+	FROM `orders`
+	WHERE user_ID = `inID`;
+      
+END $$
+
+DELIMITER ;
+
 
 /*-----------------------------------------------------------------------------*/
 DROP FUNCTION IF EXISTS `TotalProducts`;
@@ -313,5 +341,50 @@ BEGIN
 	RETURN total;
     
 END $$
+/*-----------------------------------------------------------------------------*/
+DROP FUNCTION IF EXISTS `TotalOrders`;
 
+#*********************************************
+# Helper function for total num of orders  *
+#*********************************************
+
+DELIMITER $$
+CREATE FUNCTION `TotalOrders` (inputUserID INT) RETURNS INT DETERMINISTIC
+BEGIN
+
+	DECLARE total INT DEFAULT 0;
+    
+	SELECT COUNT(order_ID) INTO total 
+    FROM orders
+    WHERE user_ID = inputUserID;
+    
+	RETURN total;
+    
+END $$
+
+/*-----------------------------------------------------------------------------*/
+DROP FUNCTION IF EXISTS `HasACart`;
+
+#*********************************************
+# Helper function for total num of orders  *
+#*********************************************
+
+DELIMITER $$
+CREATE FUNCTION `HasACart` (inputUserID INT) RETURNS BOOL DETERMINISTIC
+BEGIN
+
+	DECLARE does_exist BOOL DEFAULT FALSE;
+    DECLARE total INT DEFAULT 0;
+    
+	SELECT COUNT(cart_ID) INTO total 
+    FROM cart
+    WHERE user_ID = inputUserID;
+    
+    IF total > 0 THEN
+		SET does_exist = TRUE;
+	END IF;
+    
+	RETURN total;
+    
+END $$
 
