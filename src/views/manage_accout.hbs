@@ -67,44 +67,30 @@
                     </div>
                     {{/each}}
                     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Day</th>
+                                <th scope="col">Cost</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Pick Up</th>
+                            </tr>
+                        </thead>
                         {{#each orders }}
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Order Date</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{ placed_on }}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Total Cost</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>$ {{ total_cost }}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Status</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{ is_active }}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Pick Up Date</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{ date_time }}</p>
-                            </div>
-                        </div>
+                        <tbody>
+                            <tr>
+                                <td>{{ placed_on }}</td>
+                                <td>$ {{ total_cost }}</td>
+                                <td>{{ is_active }}</td>
+                                <td>{{ date_time }}</td>
+                            </tr>
+                        </tbody>
                         {{/each}}
-                    </div>
+                    </table>
                 </div>
             </div>
         </div>
+</div>
 </div>
 </div>
 </form>

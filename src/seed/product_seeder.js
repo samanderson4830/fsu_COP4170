@@ -1,6 +1,8 @@
 //*********************************************/
 // modules used                               *
 //*********************************************/
+
+/* files used */
 const db = require('../model/db_connection');
 
 //*********************************************/
@@ -18,7 +20,7 @@ const total_products = () => {
 
             mytotal = results[0][0].total;
             // log value for debuging
-            console.log(">>>>>results: " + results[0][0].total);
+            //console.log(">>>>>results: " + results[0][0].total);
 
         }
     });
@@ -53,12 +55,12 @@ const get_products = () => {
                 });
 
                 // display values for debuging 
-                console.log("Product ID:          " + results[0][inx].product_ID);
-                console.log("Product Name:        " + results[0][inx].product_name);
-                console.log("Product Description: " + results[0][inx].product_description);
-                console.log("Price:               " + results[0][inx].price);
-                console.log("Quantity:            " + results[0][inx].quantity);
-                console.log("-------------------------------");
+                // console.log("Product ID:          " + results[0][inx].product_ID);
+                // console.log("Product Name:        " + results[0][inx].product_name);
+                // console.log("Product Description: " + results[0][inx].product_description);
+                // console.log("Price:               " + results[0][inx].price);
+                // console.log("Quantity:            " + results[0][inx].quantity);
+                // console.log("-------------------------------");
             }
         }
     });

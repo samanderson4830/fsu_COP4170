@@ -2,9 +2,12 @@
 // modules used                               *
 //*********************************************/
 const cryptoJS = require("crypto-js");
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const bcrypt   = require('bcryptjs');
+const jwt      = require('jsonwebtoken');
+
+/* files used */
 const db = require('../model/db_connection');
+
 //*********************************************/
 
 exports.login = async (req, res) => {

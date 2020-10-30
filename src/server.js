@@ -9,11 +9,11 @@ const cookieParser = require('cookie-parser');
 const hbs          = require('hbs');
 const expressHbs   = require('express-handlebars');
 
-//*********************************************/
-const app = express();
-
+/* files used */
 dotenv.config({ path: '../src/.env' });
 const db = require('./model/db_connection');
+
+const app = express();
 
 //*********************************************/
 app.set('view engine', 'hbs');

@@ -1,11 +1,26 @@
 {{!-- All you have to include is the title, closing head tag. and opening body tag --}}
 {{!-- The header and footer files have the rest of the content --}}
+<style>
+    body {
+        margin: 0;
+        height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1549874488-b6f2b0757b4c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=966&q=80');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+    }
+</style>
+
 <div class="container mt-4">
     <div class="jumbotron">
         <h1 class="display-4">Home Page</h1>
-        <p class="lead">This is the homepage</p>
         <hr class="my-4">
-        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+        <div class="button_container">
+            <a href="/register"  class="badge badge-dark">New User</a>
+            <a href="/login"  class="badge badge-dark">Login</a>
+            <a href="/menu"  class="badge badge-dark">Sart Shopping</a>
+            <a href="/#" class="badge badge-dark">Contact</a>
+        </div>
     </div>
-</div>
 
+</div>
