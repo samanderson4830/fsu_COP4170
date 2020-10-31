@@ -35,10 +35,10 @@ router.get('/about', (req, res) => {
 });
 
 router.get('/cart', (req, res) => {
-    var user_id = 1;
+    const user_id = 1;
     user_cart.populate_cart(user_id).then(function (results) {
 
-        res.render('cart', { title: 'Shopping Cart', user_cart: results });
+        res.render('cart', { title: 'Shopping Cart', user_cart: results, cost: user_cart.get_cost });
 
     }).catch(function (err) {
         console.log("** err **" + err);
@@ -52,7 +52,7 @@ router.get('/forgot-password', (req, res) => {
 });
 
 router.get('/account-manager', (req, res) => {
-    var user_id = 1;
+    const user_id = 1;
     res.render('manage_accout', {
         title: 'Account Manager',
         user: user.get_user_info('test@test.com'),
@@ -66,8 +66,8 @@ router.get('/edit-account-info', (req, res) => {
 
 router.get('/add-to-cart/:id', (req, res) => {
 
-    var productID = req.params.id;
-    var cartID = 1;
+    const productID = req.params.id;
+    const cartID = 1;
     cart.add_to_cart(cartID, productID);
 });
 
