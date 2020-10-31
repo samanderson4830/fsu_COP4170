@@ -179,6 +179,23 @@ END $$
 DELIMITER ;
 
 /*-----------------------------------------------------------------------------*/
+
+DROP PROCEDURE IF EXISTS `GetProductInfo`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `GetProductInfo`(IN inputProductID INT)
+BEGIN
+	
+	SELECT `product_name`,`price`
+    FROM `products`
+    WHERE product_ID = `inputProductID`;
+      
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
 # get products
 DROP PROCEDURE IF EXISTS `GetProduct`;
 
@@ -257,6 +274,22 @@ BEGIN
 END $$
 
 DELIMITER ;
+/*-----------------------------------------------------------------------------*/
+# get number of products
+DROP PROCEDURE IF EXISTS `NumberOfItemsInCart`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `NumberOfItemsInCart`(IN inputUserID INT ,OUT total INT)
+BEGIN
+
+	SET total = My_Database.ItemsInCart(inputUserID);
+    SELECT total;
+    
+END $$
+
+DELIMITER ;
+
 
 /*-----------------------------------------------------------------------------*/
 # get number of products
@@ -432,3 +465,49 @@ BEGIN
 	RETURN does_exist;
     
 END $$
+
+/*-----------------------------------------------------------------------------*/
+DROP FUNCTION IF EXISTS `ItemsInCart`;
+
+#*********************************************
+# Helper function for total num of orders  *
+#*********************************************
+
+DELIMITER $$
+CREATE FUNCTION `ItemsInCart` (inputUserID INT) RETURNS INT DETERMINISTIC
+BEGIN
+	DECLARE inputCartID INT DEFAULT 0;
+    DECLARE total INT DEFAULT 0;
+    
+    SET inputCartID=Belongs_To(inputUserID);
+    
+	SELECT COUNT(product_ID) INTO total 
+    FROM cart_has
+    WHERE cart_ID = inputCartID;
+    
+
+	RETURN total;
+    
+END $$
+
+/*-----------------------------------------------------------------------------*/
+DROP FUNCTION IF EXISTS `Belongs_To`;
+
+#*********************************************
+# Helper function for total num of orders  *
+#*********************************************
+
+DELIMITER $$
+CREATE FUNCTION `Belongs_To` (inputUserID INT) RETURNS INT DETERMINISTIC
+BEGIN
+
+    DECLARE belongs_to INT DEFAULT 0;
+    
+	SELECT cart_ID INTO belongs_to
+    FROM cart
+    WHERE user_ID = inputUserID;
+    
+	RETURN belongs_to;
+    
+END $$
+
