@@ -228,6 +228,21 @@ END $$
 
 DELIMITER ;
 /*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `ProductsInCart`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `ProductsInCart`(IN inputUserID INT)
+BEGIN
+
+	SELECT cart_has.product_ID
+	FROM cart
+	INNER JOIN cart_has ON cart.cart_ID = cart_has.cart_ID && cart.user_ID = inputUserID;
+    
+END $$
+
+DELIMITER ;
+/*-----------------------------------------------------------------------------*/
 # get number of products
 DROP PROCEDURE IF EXISTS `NumberOfOrders`;
 
@@ -393,7 +408,7 @@ BEGIN
 END $$
 
 /*-----------------------------------------------------------------------------*/
-DROP FUNCTION IF EXISTS `HasACart`;
+DROP FUNCTION IF EXISTS `AlreadyInCart`;
 
 #*********************************************
 # Helper function for total num of orders  *
@@ -417,5 +432,3 @@ BEGIN
 	RETURN does_exist;
     
 END $$
-
-
