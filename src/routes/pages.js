@@ -1,15 +1,15 @@
 //*********************************************/
 // modules used                               *
 //*********************************************/
-const express   = require('express');
+const express = require('express');
 
 /* files used */
-const product   = require('../seed/product_seeder');
-const user      = require('../seed/user_seeder')
-const orders    = require('../seed/orders_seeder');
-const cart      = require('../controllers/cart_controller');
+const product = require('../seed/product_seeder');
+const user = require('../seed/user_seeder')
+const orders = require('../seed/orders_seeder');
+const cart = require('../controllers/cart_controller');
 const user_cart = require('../seed/cart_seeder');
-const router    = express.Router();
+const router = express.Router();
 
 //*********************************************/
 // pages in use                               *
@@ -36,8 +36,15 @@ router.get('/about', (req, res) => {
 
 router.get('/cart', (req, res) => {
     var user_id = 1;
-    //, user_cart: user_cart.populate_cart(user_id)
-    res.render('cart', { title: 'Shopping Cart'});
+    user_cart.populate_cart(user_id).then(function (results) {
+
+        res.render('cart', { title: 'Shopping Cart', user_cart: results });
+
+    }).catch(function (err) {
+        console.log("** err **" + err);
+        console.log("Promise rejection error: " + err);
+    });
+
 });
 
 router.get('/forgot-password', (req, res) => {
@@ -45,10 +52,11 @@ router.get('/forgot-password', (req, res) => {
 });
 
 router.get('/account-manager', (req, res) => {
+    var user_id = 1;
     res.render('manage_accout', {
         title: 'Account Manager',
         user: user.get_user_info('test@test.com'),
-        orders: orders.get_orders(1),
+        orders: orders.get_orders(user_id),
     });
 });
 
@@ -61,6 +69,10 @@ router.get('/add-to-cart/:id', (req, res) => {
     var productID = req.params.id;
     var cartID = 1;
     cart.add_to_cart(cartID, productID);
+});
+
+router.get('/checkout', (req, res) => {
+    res.render('checkout', { title: 'Checkout' });
 });
 
 
