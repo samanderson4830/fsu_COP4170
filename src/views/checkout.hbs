@@ -1,38 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Checkout</h2>
+    </div>
 
-    <!-- <link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.css"> -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css"> 
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker-standalone.css"> 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
-    
-</head>
-<body>
-     <div class="container">
-          <div class="row">
-            <div class='col-sm-6'>
-                <div class="form-group">
-                    <div class='input-group date' id='datetimepicker1'>
-                        <input type='text' class="form-control" />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
+    <div class="row">
+        <div class="col-md-4 order-md-2 mb-4">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted">Your cart</span>
+
+            </h4>
+            <ul class="list-group mb-3">
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    {{#each user_cart }}
+                    <div>
+                        <h6 class="my-0">{{product_name}}</h6>
+                    </div>
+                    <span class="text-muted">$ {{ price }}</span>
+                    {{/each}}
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Total (USD)</span>
+                    <strong> $ {{ cost }} </strong>
+                </li>
+            </ul>
+
+
+        </div>
+        <div class="col-md-8 order-md-1">
+            <h4 class="mb-3">Billing address</h4>
+            <form class="needs-validation" novalidate>
+
+
+                <div class="mb-3">
+                    <label for="username">Pick Up Date (YYYY-MM-DD)</label>
+                    <div class="input-group">
+
+                        <input type="text" class="form-control" id="username" placeholder="2000-01-01" required>
+
                     </div>
                 </div>
-            </div>
-            <script type="text/javascript">
-                $(function () {
-                    $('#datetimepicker1').datetimepicker();
-                });
-            </script>
-          </div>
-       </div>
-    </body>
-</html>
+
+                <div class="mb-3">
+                    <label for="email">Email <span class="text-muted">(Optional)</span></label>
+                    <input type="email" class="form-control" id="email" placeholder="you@example.com">
+                </div>
+
+                <div class="mb-3">
+                    <label for="address">Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+                </div>
+
+
+                <hr class="mb-4">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="save-info">
+                    <label class="custom-control-label" for="save-info">Use Account Address</label>
+                </div>
+                <hr class="mb-4">
+
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Checkout</button>
+                
+                <footer class="my-5 pt-5 text-muted text-center text-small">
+                    <p class="mb-1">&copy; 2017-2019 Company Name</p>
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><a href="/">Home</a></li>
+                        <li class="list-inline-item"><a href="/account-manager">Account</a></li>
+                        <li class="list-inline-item"><a href="/about">About</a></li>
+                    </ul>
+                </footer>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+

@@ -1,43 +1,55 @@
 //*********************************************/
 // modules used                               *
 //*********************************************/
+
+/* files used */
 const db = require('../model/db_connection');
 
 //*********************************************/
-var total_cost = 0;
-/* get the total number of items in a users cart */
-populate_cart = function (user_id) {
-    /* variables used */
-    var items = new Array;
-    var cart = new Array;
-    var total_items = 0;
-    total_cost = 0;
-    return new Promise(function (resolve, reject) {
 
+/* create empty arrays used in populate_cart */
+var items = new Array;
+var cart = new Array;
+
+cart = [];
+items = [];
+
+/* get the total number of items in a users cart */
+function populate_cart(user_id) {
+    /* variables used */
+
+
+    var total_items = 0;
+
+    if (items.length === 0 && cart.length === 0) {
         console.log("** Pt. 1 **");
         var sql = 'call My_Database.NumberOfItemsInCart(\'' + user_id + '\', @total);';
-        db.start.query(sql, (err, rows) => {
+        db.start.query(sql, function (err, rows) {
 
             if (err) {
 
-                return reject(err);
+                throw err;
             }
 
+            /* get total number of items in cart */
             total_items = rows[0][0].total;
+            console.log("Total items ---> " + total_items);
+
             if (total_items > 0) {
                 // ****************************************************
                 // get product ids in users cart                      *
                 // ****************************************************
                 console.log("** Pt. 2 **");
                 sql = 'call My_Database.ProductsInCart(\'' + user_id + '\');';
-                db.start.query(sql, (err, rows) => {
+                db.start.query(sql, function (err, rows) {
 
                     if (err) {
 
-                        return reject(err);
+                        throw err;
                     }
                     // add to items array
                     for (var inx = 0; inx < total_items; ++inx) {
+                        console.log("id ---> " + rows[0][inx].product_ID);
                         items.push({ product_ID: rows[0][inx].product_ID });
                     }
 
@@ -47,33 +59,44 @@ populate_cart = function (user_id) {
                     console.log("** Pt. 3 **");
                     if (items.length > 0) {
 
+                        /* loop through product ids to get product info */
                         sql = "call My_Database.GetProductInfo(?);";
                         for (var inx = 0; inx < total_items; ++inx) {
-                            db.start.query(sql, [items[inx].product_ID], (err, rows) => {
+
+                            db.start.query(sql, [items[inx].product_ID], function (err, rows) {
                                 if (err) {
 
-                                    return reject(err);
+                                    throw err;
+
                                 } else {
-                                    total_cost += rows[0][0].price;
+
+                                    console.log("name ---> " + rows[0][0].product_name);
                                     cart.push({
                                         product_name: rows[0][0].product_name,
                                         price: rows[0][0].price
                                     });
                                 }
-                          
                             });
                         }
-
-                        resolve(cart);
                     }
                 });
             }
         });
-    });
+    }
+    /* get the total cost of the cart */
+    //get_cost(cart);
+    console.log("Cart Size ---> " + cart.length);
+    return cart;
 }
 
-get_cost = function () {
-    return total_cost;
+
+function get_cost(array) {
+    var sum = 0;
+    for (var inx = 0; inx < array.length; ++inx) {
+        sum += array[inx].price;
+    }
+
+    return sum.toFixed(2);;
 }
 
 module.exports = {

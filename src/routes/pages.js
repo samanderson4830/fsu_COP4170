@@ -36,15 +36,7 @@ router.get('/about', (req, res) => {
 
 router.get('/cart', (req, res) => {
     const user_id = 1;
-    user_cart.populate_cart(user_id).then(function (results) {
-
-        res.render('cart', { title: 'Shopping Cart', user_cart: results, cost: user_cart.get_cost });
-
-    }).catch(function (err) {
-        console.log("** err **" + err);
-        console.log("Promise rejection error: " + err);
-    });
-
+    res.render('cart', { title: 'Shopping Cart', user_cart: user_cart.populate_cart(user_id), cost: user_cart.get_cost });
 });
 
 router.get('/forgot-password', (req, res) => {
@@ -53,6 +45,7 @@ router.get('/forgot-password', (req, res) => {
 
 router.get('/account-manager', (req, res) => {
     const user_id = 1;
+
     res.render('manage_accout', {
         title: 'Account Manager',
         user: user.get_user_info('test@test.com'),
@@ -65,14 +58,23 @@ router.get('/edit-account-info', (req, res) => {
 });
 
 router.get('/add-to-cart/:id', (req, res) => {
-
+    const user_id = 1;
     const productID = req.params.id;
     const cartID = 1;
-    cart.add_to_cart(cartID, productID);
+
+    // var myCart = user_cart.populate_cart(user_id);
+    // var cost = user_cart.get_cost(myCart);
+    
+    cart.add_to_cart(cartID, productID)
+
+    //res.render('cart', { title: 'Shopping Cart', user_cart: myCart, cost: cost });
+
 });
 
 router.get('/checkout', (req, res) => {
-    res.render('checkout', { title: 'Checkout' });
+    const user_id = 1;
+
+    res.render('checkout', { title: 'Checkout', user_cart:  user_cart.populate_cart(user_id), cost: user_cart.get_cost });
 });
 
 
