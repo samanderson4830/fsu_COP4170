@@ -476,6 +476,7 @@ DROP FUNCTION IF EXISTS `ItemsInCart`;
 DELIMITER $$
 CREATE FUNCTION `ItemsInCart` (inputUserID INT) RETURNS INT DETERMINISTIC
 BEGIN
+
 	DECLARE inputCartID INT DEFAULT 0;
     DECLARE total INT DEFAULT 0;
     
@@ -485,7 +486,6 @@ BEGIN
     FROM cart_has
     WHERE cart_ID = inputCartID;
     
-
 	RETURN total;
     
 END $$
@@ -510,4 +510,7 @@ BEGIN
 	RETURN belongs_to;
     
 END $$
+
+
+
 
