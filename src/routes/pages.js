@@ -62,6 +62,24 @@ router.get('/edit-account-info', (req, res) => {
     res.render('edit_account', { title: 'Edit Account Info' });
 });
 
+router.get('/increment-amount/:id', (req, res) => {
+    console.log ("inc +++");
+    const productID = req.params.id;
+    cart.increment_amount(cartID, productID)
+    var updatedCart = user_cart.populate_cart(userID);
+
+    res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
+});
+
+router.get('/decrement-amount/:id', (req, res) => {
+    console.log ("dec ---");
+    const productID = req.params.id;
+    cart.decrement_amount(cartID, productID)
+    var updatedCart = user_cart.populate_cart(userID);
+
+    res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
+});
+
 router.get('/add-to-cart/:id', (req, res) => {
     const productID = req.params.id;
     cart.add_to_cart(cartID, productID)

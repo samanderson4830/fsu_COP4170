@@ -60,7 +60,7 @@ function get_cost() {
     var sum = 0;
     if (sum == 0) {
         for (var inx = 0; inx < cart.length; ++inx) {
-            sum += cart[inx].price;
+            sum = sum + (cart[inx].price * cart[inx].amount);
         }
     }
     return sum.toFixed(2);;

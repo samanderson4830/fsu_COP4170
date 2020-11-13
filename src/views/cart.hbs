@@ -18,9 +18,9 @@
                 <strong> {{ product_name }} </strong><br />
             </div>
             <div class="col-xs-2 text-right">
-                <button type="button" class="btn btn-danger rounded-circle" id="btnMinus"><i data-feather="minus"></i>-</button>
+                <a href="/decrement-amount/{{ product_ID }}" type="button" class="btn btn-danger rounded-circle" id="btnMinus"><i data-feather="minus"></i>-</a>
                 <span class="badge"> {{ amount }} </span>
-                <button type="button" class="btn btn-success rounded-circle" id="btnPlus"><i data-feather="plus"></i>+</button>
+                <a  href="/increment-amount/{{ product_ID }}" type="button" class="btn btn-success rounded-circle" id="btnPlus"><i data-feather="plus"></i>+</a>
             </div>
             <div class="col-xs-3 text-right">
                 $ {{ price }}
