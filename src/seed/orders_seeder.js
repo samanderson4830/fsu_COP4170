@@ -7,10 +7,10 @@ const db = require('../model/db_connection');
 
 //*********************************************/
 var mytotal = 0;
-function total_orders (id) {
-    
+function total_orders(userID) {
+
     var sql = 'call My_Database.NumberOfOrders(?, @total);';
-    db.start.query(sql, [id], (err, results) => {
+    db.start.query(sql, [userID], (err, results) => {
 
         if (err) {
 
@@ -20,20 +20,20 @@ function total_orders (id) {
 
             mytotal = results[0][0].total;
             // log value for debuging
-            console.log(">>>>>results: " + results[0][0].total);
+            console.log(">>>>>total orders : " + results[0][0].total);
 
         }
     });
- 
+
     return mytotal;
 }
 
-function get_orders(id) {
+function get_orders(userID) {
 
-    var total = total_orders(id);
+    var total = total_orders(userID);
     var orders = new Array;
-    var sql = 'call My_Database.GetUserOrders(?);';
-    db.start.query(sql, [id], (err, results) => {
+    var sql = 'call My_Database.GetUserOrders(\'' + userID + '\');';
+    db.start.query(sql,  (err, results) => {
         if (err) {
 
             throw err;
@@ -51,13 +51,22 @@ function get_orders(id) {
 
                     status = "Inactive";
                 }
-  
+                /* parse output for dates */
+                var pick_up = results[0][inx].date_time;
+                var placed = results[0][inx].placed_on;
+
+                var temp = new String(pick_up);
+                pick_up =  parse_date(temp);
+                
+                var temp2 = new String(placed);
+                placed =  parse_date(temp2);
+                
                 orders.push({
                     total_cost: results[0][inx].total_cost,
                     order_ID: results[0][inx].order_ID,
                     is_active: status,
-                    date_time: results[0][inx].date_time,
-                    placed_on: results[0][inx].placed_on
+                    date_time: pick_up,
+                    placed_on: placed
                 });
             }
         }
@@ -66,6 +75,9 @@ function get_orders(id) {
     return orders;
 }
 
+function parse_date(str) {
+    return str.substr(0, 15);
+}
 module.exports = {
     get_orders
 }

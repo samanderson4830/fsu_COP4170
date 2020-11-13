@@ -9,7 +9,14 @@ const user = require('../seed/user_seeder')
 const orders = require('../seed/orders_seeder');
 const cart = require('../controllers/cart_controller');
 const user_cart = require('../seed/cart_seeder');
+const contact = require('../seed/contact_seeder');
 const router = express.Router();
+
+// Global Variables ****************************/
+const userID = 1;
+const adminID = 1;
+const cartID = 1;
+
 
 //*********************************************/
 // pages in use                               *
@@ -35,8 +42,9 @@ router.get('/about', (req, res) => {
 });
 
 router.get('/cart', (req, res) => {
-    const user_id = 1;
-    res.render('cart', { title: 'Shopping Cart', user_cart: user_cart.populate_cart(user_id), cost: user_cart.get_cost });
+    var updatedCart = user_cart.populate_cart(userID);
+
+    res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
 });
 
 router.get('/forgot-password', (req, res) => {
@@ -44,12 +52,8 @@ router.get('/forgot-password', (req, res) => {
 });
 
 router.get('/account-manager', (req, res) => {
-    const user_id = 1;
-
     res.render('manage_accout', {
-        title: 'Account Manager',
-        user: user.get_user_info('test@test.com'),
-        orders: orders.get_orders(user_id),
+        title: 'Account Manager', user: user.get_user_info(userID), orders: orders.get_orders(userID),
     });
 });
 
@@ -58,25 +62,18 @@ router.get('/edit-account-info', (req, res) => {
 });
 
 router.get('/add-to-cart/:id', (req, res) => {
-    const user_id = 1;
     const productID = req.params.id;
-    const cartID = 1;
-
-    // var myCart = user_cart.populate_cart(user_id);
-    // var cost = user_cart.get_cost(myCart);
-    
     cart.add_to_cart(cartID, productID)
+    var updatedCart = user_cart.populate_cart(userID);
 
-    //res.render('cart', { title: 'Shopping Cart', user_cart: myCart, cost: cost });
-
+    res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
 });
 
 router.get('/checkout', (req, res) => {
-    const user_id = 1;
+    var updatedCart = user_cart.populate_cart(userID);
 
-    res.render('checkout', { title: 'Checkout', user_cart:  user_cart.populate_cart(user_id), cost: user_cart.get_cost });
+    res.render('checkout', { title: 'Checkout', user_cart: updatedCart, cost: user_cart.get_cost });
 });
-
 
 // exports
 module.exports = router;

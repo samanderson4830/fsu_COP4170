@@ -8,94 +8,60 @@ const db = require('../model/db_connection');
 //*********************************************/
 
 /* create empty arrays used in populate_cart */
-var items = new Array;
 var cart = new Array;
+var total = 0;
+const total_items = (userID) => {
+    console.log("HERE!!");
+    var sql = 'call My_Database.NumberOfItemsInCart(?, @total);';
+    db.start.query(sql, [userID], (err, result) => {
+        if (err) {
+            throw err;
 
-cart = [];
-items = [];
+        } else {
+            total = result[0][0].total;
 
-/* get the total number of items in a users cart */
-function populate_cart(user_id) {
-    /* variables used */
+        }
+    });
 
+    return total;
+}
 
-    var total_items = 0;
+function populate_cart(userID) {
 
-    if (items.length === 0 && cart.length === 0) {
-        console.log("** Pt. 1 **");
-        var sql = 'call My_Database.NumberOfItemsInCart(\'' + user_id + '\', @total);';
-        db.start.query(sql, function (err, rows) {
+    cart = [];
+    var total = total_items(userID);
+    console.log("Data found ..... " + total);
+    
+    if (total > 0 && cart.length === 0) {
+        var sql = 'call My_Database.PopulateCart(\'' + userID + '\');';
+        db.start.query(sql, function (err, result) {
 
             if (err) {
 
                 throw err;
-            }
+            } else {
+                // add to items array
+                for (var inx = 0; inx < total; ++inx) {
 
-            /* get total number of items in cart */
-            total_items = rows[0][0].total;
-            console.log("Total items ---> " + total_items);
-
-            if (total_items > 0) {
-                // ****************************************************
-                // get product ids in users cart                      *
-                // ****************************************************
-                console.log("** Pt. 2 **");
-                sql = 'call My_Database.ProductsInCart(\'' + user_id + '\');';
-                db.start.query(sql, function (err, rows) {
-
-                    if (err) {
-
-                        throw err;
-                    }
-                    // add to items array
-                    for (var inx = 0; inx < total_items; ++inx) {
-                        console.log("id ---> " + rows[0][inx].product_ID);
-                        items.push({ product_ID: rows[0][inx].product_ID });
-                    }
-
-                    // ****************************************************
-                    // get product info of user cart                      *
-                    // ****************************************************
-                    console.log("** Pt. 3 **");
-                    if (items.length > 0) {
-
-                        /* loop through product ids to get product info */
-                        sql = "call My_Database.GetProductInfo(?);";
-                        for (var inx = 0; inx < total_items; ++inx) {
-
-                            db.start.query(sql, [items[inx].product_ID], function (err, rows) {
-                                if (err) {
-
-                                    throw err;
-
-                                } else {
-
-                                    console.log("name ---> " + rows[0][0].product_name);
-                                    cart.push({
-                                        product_name: rows[0][0].product_name,
-                                        price: rows[0][0].price
-                                    });
-                                }
-                            });
-                        }
-                    }
-                });
+                    cart.push({
+                        product_name: result[0][inx].product_name,
+                        price: result[0][inx].price
+                    });
+                }
+                console.log("Cart length is --> " + cart.length);
             }
         });
     }
-    /* get the total cost of the cart */
-    //get_cost(cart);
-    console.log("Cart Size ---> " + cart.length);
     return cart;
 }
 
-
-function get_cost(array) {
+function get_cost() {
     var sum = 0;
-    for (var inx = 0; inx < array.length; ++inx) {
-        sum += array[inx].price;
+    if (sum == 0) {
+        for (var inx = 0; inx < cart.length; ++inx) {
+            sum += cart[inx].price;
+        }
     }
-
     return sum.toFixed(2);;
 }
 

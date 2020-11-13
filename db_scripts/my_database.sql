@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS `My_Database`.`orders`
   `order_ID`       INT NOT NULL AUTO_INCREMENT UNIQUE,
   `user_ID`        INT NOT NULL, 
   `total_cost`     FLOAT NOT NULL,
+  `order_notes`    VARCHAR(100) NOT NULL,
   `is_active`      BOOL NOT NULL,
   `date_time`      DATE NOT NULL,   # pick up day 
   `placed_on`      TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP, 
@@ -167,12 +168,47 @@ DROP PROCEDURE IF EXISTS `GetUserInfo`;
 
 DELIMITER $$
 USE `My_Database`$$
-CREATE PROCEDURE `GetUserInfo`(IN inputEmail VARCHAR(100))
+CREATE PROCEDURE `GetUserInfo`(IN inputID VARCHAR(100))
 BEGIN
 	
-	SELECT `user_ID`,`email`, `address`, `phone_number` 
+	SELECT `email`, `address`, `phone_number` 
     FROM `users`
-    WHERE email = `inputEmail`;
+    WHERE user_ID = `inputID`;
+      
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `GetContactInfo`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `GetContactInfo`(IN inputAdminID VARCHAR(100))
+BEGIN
+	
+	SELECT `email`, `ig_link`, `fb_link`, `twitter_link`
+    FROM `admin`
+    WHERE user_ID = `inputAdminID`;
+      
+END $$
+
+DELIMITER ;
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `PopulateCart`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `PopulateCart`(IN inputUserID INT)
+BEGIN
+	
+	SELECT  DISTINCT(P.product_name), P.price
+    FROM users U, products P, cart C, cart_has H
+    WHERE U.user_ID = `inputUserID` && 
+		  C.cart_ID = H.cart_ID     &&
+	      P.product_ID IN (SELECT cart_has.product_ID
+						   FROM cart
+					       INNER JOIN cart_has ON cart.cart_ID = cart_has.cart_ID && cart.user_ID = inputUserID);
       
 END $$
 
@@ -245,17 +281,25 @@ END $$
 
 DELIMITER ;
 /*-----------------------------------------------------------------------------*/
-DROP PROCEDURE IF EXISTS `ProductsInCart`;
+DROP PROCEDURE IF EXISTS `CartCost`;
 
 DELIMITER $$
 USE `My_Database`$$
-CREATE PROCEDURE `ProductsInCart`(IN inputUserID INT)
+CREATE PROCEDURE `CartCost`(IN inputUserID INT)
 BEGIN
 
-	SELECT cart_has.product_ID
-	FROM cart
-	INNER JOIN cart_has ON cart.cart_ID = cart_has.cart_ID && cart.user_ID = inputUserID;
-    
+	CREATE VIEW user_items AS
+    SELECT P.product_name, P.price
+    FROM users U, products P, cart C, cart_has H
+    WHERE U.user_ID = inputUserID && 
+		  C.cart_ID = H.cart_ID     &&
+	      P.product_ID IN (SELECT cart_has.product_ID
+						   FROM cart
+					       INNER JOIN cart_has ON cart.cart_ID = cart_has.cart_ID && cart.user_ID = inputUserID);
+                           
+	SELECT SUM(price)
+    FROM user_items;
+  
 END $$
 
 DELIMITER ;
@@ -348,11 +392,11 @@ DROP PROCEDURE IF EXISTS `AddOrder`;
 
 DELIMITER $$
 USE `My_Database`$$
-CREATE PROCEDURE `AddOrder`(IN inputUserID INT, IN inputDay DATE, IN inputCost FLOAT)
+CREATE PROCEDURE `AddOrder`(IN inputUserID INT, IN inputDay DATE, IN inputCost FLOAT, IN inputNotes VARCHAR(100))
 BEGIN
 
-   INSERT INTO `My_Database`.`orders` (`user_ID`,`date_time`, `total_cost`, `is_active`) 
-   VALUES (inputUserID,inputDay, inputCost, true);
+   INSERT INTO `My_Database`.`orders` (`user_ID`,`date_time`, `total_cost`, `order_notes`,`is_active`) 
+   VALUES (inputUserID,inputDay, inputCost, inputNotes,true);
       
 END $$
 

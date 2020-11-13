@@ -20,11 +20,11 @@ const total_products = () => {
 
             mytotal = results[0][0].total;
             // log value for debuging
-            //console.log(">>>>>results: " + results[0][0].total);
+            // console.log(">>>>>results: " + results[0][0].total);
 
         }
     });
- 
+
     return mytotal;
 }
 
@@ -33,7 +33,7 @@ const get_products = () => {
     // variables
     var products = new Array;
     var total = total_products();
-    console.log ("Product total is : " + total);
+    console.log("Product total is : " + total);
 
     var sql = "call My_Database.GetProduct()";
     db.start.query(sql, async (err, results) => {
@@ -46,7 +46,7 @@ const get_products = () => {
 
             // populate the prodcuts array with database      
             for (var inx = 0; inx < total; ++inx) {
-        
+
                 products.push({
                     product_ID: results[0][inx].product_ID,
                     product_name: results[0][inx].product_name,

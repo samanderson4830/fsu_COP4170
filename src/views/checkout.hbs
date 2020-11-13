@@ -7,8 +7,8 @@
         <div class="col-md-4 order-md-2 mb-4">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-muted">Your cart</span>
-
             </h4>
+
             <ul class="list-group mb-3">
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     {{#each user_cart }}
@@ -24,32 +24,23 @@
                 </li>
             </ul>
 
-
         </div>
+
         <div class="col-md-8 order-md-1">
-            <h4 class="mb-3">Billing address</h4>
-            <form class="needs-validation" novalidate>
+            <h4 class="mb-3">Order Info</h4>
+            <form action="/auth/checkout" method="POST">
 
-
-                <div class="mb-3">
-                    <label for="username">Pick Up Date (YYYY-MM-DD)</label>
+                <div class="form-group">
+                    <label for="date">Pick Up Date (YYYY-MM-DD)</label>
                     <div class="input-group">
-
-                        <input type="text" class="form-control" id="username" placeholder="2000-01-01" required>
-
+                        <input type="text" class="form-control" id="pick_up" placeholder="2000-01-01" name="pick_up" required >
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="email">Email <span class="text-muted">(Optional)</span></label>
-                    <input type="email" class="form-control" id="email" placeholder="you@example.com">
+                <div class="form-group">
+                    <label for="order_notes">Order Notes <span class="text-muted">(Optional)</span></label>
+                    <input type="text" class="form-control" id="order_notes" placeholder="Max 100 Characters" name="order_notes" maxlength="100">
                 </div>
-
-                <div class="mb-3">
-                    <label for="address">Address</label>
-                    <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
-                </div>
-
 
                 <hr class="mb-4">
                 <div class="custom-control custom-checkbox">
@@ -72,6 +63,7 @@
             </form>
         </div>
     </div>
+
 </div>
 
 
