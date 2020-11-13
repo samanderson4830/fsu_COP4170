@@ -187,7 +187,7 @@ USE `My_Database`$$
 CREATE PROCEDURE `GetContactInfo`(IN inputAdminID VARCHAR(100))
 BEGIN
 	
-	SELECT `email`, `ig_link`, `fb_link`, `twitter_link`
+	SELECT `about`,`email`, `ig_link`, `fb_link`, `twitter_link`
     FROM `admin`
     WHERE user_ID = `inputAdminID`;
       
@@ -202,7 +202,7 @@ USE `My_Database`$$
 CREATE PROCEDURE `PopulateCart`(IN inputUserID INT)
 BEGIN
 	
-	SELECT  DISTINCT(P.product_name), P.price
+	SELECT  DISTINCT(P.product_name), P.price, H.amount, P.product_ID
     FROM users U, products P, cart C, cart_has H
     WHERE U.user_ID = `inputUserID` && 
 		  C.cart_ID = H.cart_ID     &&
@@ -261,6 +261,21 @@ BEGIN
 		INSERT INTO `My_Database`.`cart_has` (`cart_ID`,`product_ID`, `amount`) 
 		VALUES (inCartID, inProductID, 1);
     END IF;
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `RemoveFromCart`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `RemoveFromCart`(IN inProductID INT, IN inCartID INT)
+BEGIN
+
+	DELETE FROM cart_has 
+    WHERE cart_ID = inCartID && product_ID = inProductID ;
+    
 END $$
 
 DELIMITER ;
