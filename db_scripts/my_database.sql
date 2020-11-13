@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS `products`;
 DROP TABLE IF EXISTS `cart`;
 DROP TABLE IF EXISTS `cart_has`;
 DROP TABLE IF EXISTS `orders`;
-DROP TABLE IF EXISTS `placed_order`;
+DROP TABLE IF EXISTS `order_has`;
 DROP TABLE IF EXISTS `day_avaliable`;
 
 # customer/user information Table
@@ -101,6 +101,18 @@ CREATE TABLE IF NOT EXISTS `My_Database`.`orders`
   CONSTRAINT `user_fk` FOREIGN KEY (`user_ID`) REFERENCES users (`user_ID`) ON UPDATE CASCADE
 )ENGINE = InnoDB;
 
+# Table for items found in cart
+CREATE TABLE IF NOT EXISTS `My_Database`.`order_has` 
+(
+  `order_ID`   INT NOT NULL,
+  `product_ID` INT NOT NULL,
+  `amount`     INT,
+  PRIMARY KEY (`order_ID`,`product_ID`)  ,
+  KEY `orders_product_fk` (`product_ID`),
+  KEY `order_id_fk` (`order_ID`),
+  CONSTRAINT `orders_product_fk` FOREIGN KEY (`product_ID`) REFERENCES products (`product_ID`) ON UPDATE CASCADE,
+  CONSTRAINT `order_id_fk` FOREIGN KEY (`order_ID`) REFERENCES orders(`order_ID`) ON UPDATE CASCADE 
+)ENGINE = InnoDB;
 
 /*-----------------------------------------------------------------------------*/
 # create a new user 
@@ -228,6 +240,7 @@ BEGIN
 END $$
 
 DELIMITER ;
+
 /*-----------------------------------------------------------------------------*/
 DROP PROCEDURE IF EXISTS `PopulateCart`;
 
@@ -243,6 +256,22 @@ BEGIN
 	      P.product_ID IN (SELECT cart_has.product_ID
 						   FROM cart
 					       INNER JOIN cart_has ON cart.cart_ID = cart_has.cart_ID && cart.user_ID = inputUserID);
+      
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `ProductInCart`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `ProductInCart`(IN inputUserID INT)
+BEGIN
+	
+	SELECT cart_has.product_ID, cart_has.amount
+	FROM cart
+	INNER JOIN cart_has ON cart.cart_ID = cart_has.cart_ID && cart.user_ID = inputUserID;
       
 END $$
 
@@ -345,6 +374,25 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `InOrder`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `InOrder`(IN inputUserID INT ,IN inputProductID INT, inputAmount INT)
+BEGIN
+
+	DECLARE inputOrderID INT;
+	SET inputOrderID = My_Database.LastOrder(inputUserID);
+    
+	INSERT INTO `My_Database`.`order_has` ( `order_ID`, `product_ID`, `amount`) 
+	VALUES (inputOrderID , inputProductID, inputAmount);
+    
+END $$
+
+DELIMITER ;
+
 /*-----------------------------------------------------------------------------*/
 # get number of products
 DROP PROCEDURE IF EXISTS `NumberOfItemsInCart`;
@@ -583,7 +631,7 @@ BEGIN
 END $$
 
 /*-----------------------------------------------------------------------------*/
-DROP FUNCTION IF EXISTS `Belongs_To`;
+DROP FUNCTION IF EXISTS `MaxQuantity`;
 
 #*********************************************
 # Helper function for total num of orders  *
@@ -598,6 +646,24 @@ BEGIN
 	SELECT quantity INTO num
     FROM products
     WHERE product_ID = inputProductID;
+    
+	RETURN num;
+    
+END $$
+
+/*-----------------------------------------------------------------------------*/
+DROP FUNCTION IF EXISTS `LastOrder`;
+
+DELIMITER $$
+CREATE FUNCTION `LastOrder` (inputUserID INT) RETURNS INT DETERMINISTIC
+BEGIN
+
+    DECLARE num INT DEFAULT 0;
+    
+	SELECT order_ID INTO num
+    FROM orders
+    WHERE user_ID = inputUserID && placed_on = ( SELECT MAX(placed_on)
+											     FROM orders);
     
 	RETURN num;
     
