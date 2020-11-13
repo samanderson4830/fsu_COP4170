@@ -180,6 +180,40 @@ END $$
 DELIMITER ;
 
 /*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `IncrementAmount`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `IncrementAmount`(IN inputProductID INT, IN inputCartID INT)
+BEGIN
+
+	DECLARE theMax INT;
+    SET theMax =  My_Database.MaxQuantity(inputProductID);
+    
+	UPDATE cart_has
+	SET amount = amount + 1
+	WHERE inputProductID = product_ID && inputCartID = cart_ID && amount < theMax;
+
+END $$
+
+DELIMITER ;
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `DecrementAmount`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `DecrementAmount`(IN inputProductID INT, IN inputCartID INT)
+BEGIN
+
+	UPDATE cart_has
+	SET amount = amount - 1
+	WHERE inputProductID = product_ID && inputCartID = cart_ID && amount > 0;
+
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
 DROP PROCEDURE IF EXISTS `GetContactInfo`;
 
 DELIMITER $$
@@ -545,5 +579,26 @@ BEGIN
     WHERE user_ID = inputUserID;
     
 	RETURN belongs_to;
+    
+END $$
+
+/*-----------------------------------------------------------------------------*/
+DROP FUNCTION IF EXISTS `Belongs_To`;
+
+#*********************************************
+# Helper function for total num of orders  *
+#*********************************************
+
+DELIMITER $$
+CREATE FUNCTION `MaxQuantity` (inputProductID INT) RETURNS INT DETERMINISTIC
+BEGIN
+
+    DECLARE num INT DEFAULT 0;
+    
+	SELECT quantity INTO num
+    FROM products
+    WHERE product_ID = inputProductID;
+    
+	RETURN num;
     
 END $$
