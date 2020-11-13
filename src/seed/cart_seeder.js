@@ -11,7 +11,7 @@ const db = require('../model/db_connection');
 var cart = new Array;
 var total = 0;
 function total_items(userID) {
-    console.log("cart seeder total!!");
+    // console.log("cart seeder total!!");
     var sql = 'call My_Database.NumberOfItemsInCart(?, @total);';
     db.start.query(sql, [userID], (err, result) => {
         if (err) {
@@ -68,5 +68,6 @@ function get_cost() {
 
 module.exports = {
     populate_cart,
-    get_cost
+    get_cost,
+    total_items
 }

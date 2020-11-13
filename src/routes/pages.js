@@ -4,18 +4,18 @@
 const express = require('express');
 
 /* files used */
-const product = require('../seed/product_seeder');
-const user = require('../seed/user_seeder')
-const orders = require('../seed/orders_seeder');
-const cart = require('../controllers/cart_controller');
+const product   = require('../seed/product_seeder');
+const user      = require('../seed/user_seeder')
+const orders    = require('../seed/orders_seeder');
+const cart      = require('../controllers/cart_controller');
 const user_cart = require('../seed/cart_seeder');
-const contact = require('../seed/contact_seeder');
-const router = express.Router();
+const contact   = require('../seed/contact_seeder');
+const router    = express.Router();
 
 // Global Variables ****************************/
-const userID = 1;
+const userID  = 1;
 const adminID = 1;
-const cartID = 1;
+const cartID  = 1;
 
 //*********************************************/
 // pages in use                               *
@@ -99,6 +99,7 @@ router.get('/remove-from-cart/:id', (req, res) => {
 
 router.get('/checkout', (req, res) => {
     var updatedCart = user_cart.populate_cart(userID);
+  
     res.render('checkout', { title: 'Checkout', user_cart: updatedCart, cost: user_cart.get_cost });
 });
 
