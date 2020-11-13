@@ -17,7 +17,6 @@ const userID = 1;
 const adminID = 1;
 const cartID = 1;
 
-
 //*********************************************/
 // pages in use                               *
 //*********************************************/
@@ -38,7 +37,9 @@ router.get('/menu', (req, res) => {
 });
 
 router.get('/about', (req, res) => {
-    res.render('about', { title: 'About Page' });
+    var info = contact.get_contact_info(adminID);
+ 
+    res.render('about', { title: 'About Page' , about: info[0].about });
 });
 
 router.get('/cart', (req, res) => {
@@ -69,9 +70,17 @@ router.get('/add-to-cart/:id', (req, res) => {
     res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
 });
 
-router.get('/checkout', (req, res) => {
+router.get('/remove-from-cart/:id', (req, res) => {
+    const productID = req.params.id;
+    console.log("Product --> " + productID);
+    cart.remove(cartID, productID);
     var updatedCart = user_cart.populate_cart(userID);
 
+    res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
+});
+
+router.get('/checkout', (req, res) => {
+    var updatedCart = user_cart.populate_cart(userID);
     res.render('checkout', { title: 'Checkout', user_cart: updatedCart, cost: user_cart.get_cost });
 });
 

@@ -10,8 +10,8 @@ const db = require('../model/db_connection');
 /* create empty arrays used in populate_cart */
 var cart = new Array;
 var total = 0;
-const total_items = (userID) => {
-    console.log("HERE!!");
+function total_items(userID) {
+    console.log("cart seeder total!!");
     var sql = 'call My_Database.NumberOfItemsInCart(?, @total);';
     db.start.query(sql, [userID], (err, result) => {
         if (err) {
@@ -19,7 +19,6 @@ const total_items = (userID) => {
 
         } else {
             total = result[0][0].total;
-
         }
     });
 
@@ -31,10 +30,10 @@ function populate_cart(userID) {
     cart = [];
     var total = total_items(userID);
     console.log("Data found ..... " + total);
-    
+
     if (total > 0 && cart.length === 0) {
         var sql = 'call My_Database.PopulateCart(\'' + userID + '\');';
-        db.start.query(sql, function (err, result) {
+        db.start.query(sql, async (err, result) => {
 
             if (err) {
 
@@ -44,7 +43,9 @@ function populate_cart(userID) {
                 for (var inx = 0; inx < total; ++inx) {
 
                     cart.push({
+                        product_ID: result[0][inx].product_ID,
                         product_name: result[0][inx].product_name,
+                        amount: result[0][inx].amount,
                         price: result[0][inx].price
                     });
                 }

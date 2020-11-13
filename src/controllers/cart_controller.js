@@ -9,7 +9,7 @@ const db = require('../model/db_connection');
 function add_to_cart(cartID, productID) {
 
     console.log("add to cart    -----> " + cartID);
-    console.log("product id is  -----> " + productID)
+    console.log("product id is  -----> " + productID);
     var sql = 'call My_Database.AddToCart(\'' + productID + '\', \'' + cartID + '\');';
 
     db.start.query(sql, function (error) {
@@ -26,7 +26,26 @@ function add_to_cart(cartID, productID) {
     return false;
 }
 
+function remove (cartID, productID) {
 
+    console.log("remove from cart    -----> " + cartID);
+    console.log("product id is       -----> " + productID);
+    var sql = 'call My_Database.RemoveFromCart(\'' + productID + '\', \'' + cartID + '\');';
+
+    db.start.query(sql, function (error) {
+
+        if (error) {
+
+            console.log(error);
+        } else {
+    
+            console.log("Removed From Cart");
+            return true;
+        }
+    });
+    return false;
+}
 module.exports = {
-    add_to_cart
+    add_to_cart,
+    remove
 }

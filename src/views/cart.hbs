@@ -19,14 +19,14 @@
             </div>
             <div class="col-xs-2 text-right">
                 <button type="button" class="btn btn-danger rounded-circle" id="btnMinus"><i data-feather="minus"></i>-</button>
-                <span class="badge"> quantity??? </span>
-                 <button type="button" class="btn btn-success rounded-circle" id="btnPlus"><i data-feather="plus"></i>+</button>
+                <span class="badge"> {{ amount }} </span>
+                <button type="button" class="btn btn-success rounded-circle" id="btnPlus"><i data-feather="plus"></i>+</button>
             </div>
             <div class="col-xs-3 text-right">
                 $ {{ price }}
             </div>
             <div class="col-xs-2 text-right">
-                <a href="/remove/{{ product_id }}" class="btn btn-danger"></i> Remove </a>
+                <a href="/remove-from-cart/{{ product_ID }}" class="btn btn-danger"></i> Remove </a>
             </div>
         </li>
         {{/each}}

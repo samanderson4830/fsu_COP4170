@@ -17,8 +17,9 @@ const get_contact_info = (userID) => {
             throw err;
 
         } else {
-
+           // console.log("About --> "+ result[0][0].about);
             contactInfo.push({
+                about: result[0][0].about,
                 email: result[0][0].email,
                 ig_link: result[0][0].ig_link,
                 fb_link: result[0][0].fb_link,
