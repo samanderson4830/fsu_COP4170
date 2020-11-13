@@ -249,13 +249,13 @@ USE `My_Database`$$
 CREATE PROCEDURE `PopulateCart`(IN inputUserID INT)
 BEGIN
 	
-	SELECT  DISTINCT(P.product_name), P.price, H.amount, P.product_ID
+	SELECT (P.product_ID), P.product_name, P.price, H.amount
     FROM users U, products P, cart C, cart_has H
     WHERE U.user_ID = `inputUserID` && 
-		  C.cart_ID = H.cart_ID     &&
-	      P.product_ID IN (SELECT cart_has.product_ID
-						   FROM cart
-					       INNER JOIN cart_has ON cart.cart_ID = cart_has.cart_ID && cart.user_ID = inputUserID);
+	      P.product_ID IN (SELECT H.product_ID
+						   FROM cart_has
+						   JOIN cart ON C.cart_ID = H.cart_ID WHERE C.user_ID = inputUserID
+						   );
       
 END $$
 
@@ -668,3 +668,6 @@ BEGIN
 	RETURN num;
     
 END $$
+
+
+
