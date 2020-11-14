@@ -78,6 +78,7 @@ function get_orders(userID) {
 function parse_date(str) {
     return str.substr(0, 15);
 }
+
 module.exports = {
     get_orders
 }

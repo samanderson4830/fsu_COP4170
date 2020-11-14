@@ -10,6 +10,7 @@ const orders    = require('../seed/orders_seeder');
 const cart      = require('../controllers/cart_controller');
 const user_cart = require('../seed/cart_seeder');
 const contact   = require('../seed/contact_seeder');
+const days      = require('../seed/days_seeder');
 const router    = express.Router();
 
 // Global Variables ****************************/
@@ -99,8 +100,9 @@ router.get('/remove-from-cart/:id', (req, res) => {
 
 router.get('/checkout', (req, res) => {
     var updatedCart = user_cart.populate_cart(userID);
+    var myDays = days.day_avaliable();
   
-    res.render('checkout', { title: 'Checkout', user_cart: updatedCart, cost: user_cart.get_cost });
+    res.render('checkout', { title: 'Checkout', user_cart: updatedCart, cost: user_cart.get_cost, days: myDays});
 });
 
 // exports

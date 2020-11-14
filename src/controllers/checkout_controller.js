@@ -1,6 +1,6 @@
-//*********************************************/
+///*********************************************/
 // modules used                               *
-//*********************************************/
+// *********************************************/
 /* files used */
 const db = require('../model/db_connection');
 const user_cart = require('../seed/cart_seeder');
@@ -10,16 +10,16 @@ exports.checkout = function (req, res) {
 
     try {
         console.log(req.body);
-        var { pick_up, order_notes } = req.body;
+        var { pickUp, orderNotes } = req.body;
 
-        if (!order_notes) {
-            order_notes = "No notes ...";
+        if (!orderNotes) {
+            orderNotes = "None";
         }
 
-        const user_id = 1;
-        const total_cost = user_cart.get_cost();
-        // userid, date, cost
-        var sql = 'call My_Database.AddOrder(\'' + user_id + '\', \'' + pick_up + '\', \'' + total_cost + '\', \'' + order_notes + '\');';
+        const userID = 1;
+        const totalCost = user_cart.get_cost();
+        // userid, date, cost, notes
+        var sql = 'call My_Database.AddOrder(\'' + userID + '\', \'' + pickUp + '\', \'' + totalCost + '\', \'' + orderNotes + '\');';
         db.start.query(sql, (error, results) => {
             if (error) {
                 throw error;
@@ -28,7 +28,7 @@ exports.checkout = function (req, res) {
                 console.log("Order added\n");
             }
         });
-        update_order(user_id);
+        update_order(userID);
         res.status(200).redirect('/');
     } catch (error) {
 
@@ -41,9 +41,9 @@ function update_order(userID) {
     var items = new Array;
     items = [];
     var total = user_cart.total_items(userID);
-    var sql = 'call My_Database.ProductInCart(\'' + userID + '\');';
-
+    
     if (total > 0 && items.length === 0) {
+        var sql = 'call My_Database.ProductInCart(\'' + userID + '\');';
         db.start.query(sql, (err, result) => {
             if (err) {
                 throw err;
@@ -56,7 +56,6 @@ function update_order(userID) {
                     });
                 }
 
-                console.log("len is -> " + items.length);
                 for (var inx = 0; inx < items.length; ++inx) {
                     sql = 'call My_Database.InOrder(\'' + userID + '\', \'' + items[inx].product_ID + '\', \'' + items[inx].amount + '\');';
                     db.start.query(sql, (error, results) => {
@@ -67,7 +66,6 @@ function update_order(userID) {
                         }
                     });
                 }
-
             }
         });
     }

@@ -29,25 +29,29 @@
         <div class="col-md-8 order-md-1">
             <h4 class="mb-3">Order Info</h4>
             <form action="/auth/checkout" method="POST">
-
+             <hr class="mb-4">
+                <label>Dates Avaliable <span class="text-muted"></span></label>
+                <div class="custom-control">
+                    <ul class="list-group list-group-flush">
+                    {{#each days}}
+                    <li class="list-group-item"><b>Date: </b>{{ date_time }} <b>| Slots Left: </b>  {{ slots }}</li>
+                    {{/each}}
+                    </ul>
+                </div>
+                <hr class="mb-4">
                 <div class="form-group">
                     <label for="date">Pick Up Date (YYYY-MM-DD)</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="pick_up" placeholder="2000-01-01" name="pick_up" required >
+                        <input type="text" class="form-control" id="pickUp" placeholder="2000-01-01" name="pickUp" required >
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="order_notes">Order Notes <span class="text-muted">(Optional)</span></label>
-                    <input type="text" class="form-control" id="order_notes" placeholder="Max 100 Characters" name="order_notes" maxlength="100">
+                    <input type="text" class="form-control" id="orderNotes" placeholder="Max 100 Characters" name="orderNotes" maxlength="100">
                 </div>
 
-                <hr class="mb-4">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="save-info">
-                    <label class="custom-control-label" for="save-info">Use Account Address</label>
-                </div>
-                <hr class="mb-4">
+   
 
                 <button class="btn btn-primary btn-lg btn-block" type="submit">Checkout</button>
                 
