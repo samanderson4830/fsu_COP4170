@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `My_Database`.`products`
   `product_ID`         INT NOT NULL AUTO_INCREMENT UNIQUE,
   `product_name`       VARCHAR(50) NOT NULL,
   `product_description`VARCHAR(500) NOT NULL,
+  `img_link`		   VARCHAR(500),
   `price`              FLOAT NOT NULL,
   `quantity`           INT NOT NULL,
   PRIMARY KEY (`product_ID`)
@@ -165,11 +166,12 @@ USE `My_Database`$$
 CREATE PROCEDURE `AddProduct`(IN inputName VARCHAR(50), 
 						      IN inputDescription VARCHAR(500), 
 						      IN inputPrice FLOAT,
-                              IN inputQuantity VARCHAR (100))
+                              IN inputQuantity VARCHAR (100),
+                              IN inputImgLink VARCHAR (500))
 BEGIN
 	
-   INSERT INTO `My_Database`.`products` ( `product_name`, `product_description`, `price`, `quantity`) 
-   VALUES ( inputName, inputDescription, inputPrice, inputQuantity) ;
+   INSERT INTO `My_Database`.`products` ( `product_name`, `product_description`, `price`, `quantity`, `img_link`) 
+   VALUES ( inputName, inputDescription, inputPrice, inputQuantity, inputImgLink) ;
       
 END $$
 
@@ -730,7 +732,6 @@ BEGIN
     
 END $$
 /*-----------------------------------------------------------------------------*/
-
 
 
 
