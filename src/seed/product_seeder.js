@@ -49,6 +49,7 @@ const get_products = () => {
 
                 products.push({
                     product_ID: results[0][inx].product_ID,
+                    img_link: results[0][inx].img_link,
                     product_name: results[0][inx].product_name,
                     product_description: results[0][inx].product_description,
                     price: results[0][inx].price
