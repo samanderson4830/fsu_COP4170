@@ -376,6 +376,22 @@ END $$
 DELIMITER ;
 
 /*-----------------------------------------------------------------------------*/
+# get number of products
+DROP PROCEDURE IF EXISTS `NumberOfDays`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `NumberOfDays`(OUT total INT)
+BEGIN
+
+	SET total = My_Database.TotalDays();
+    SELECT total;
+    
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
 DROP PROCEDURE IF EXISTS `InOrder`;
 
 DELIMITER $$
@@ -463,6 +479,20 @@ END $$
 DELIMITER ;
 
 /*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `GetAvaliableDays`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `GetAvaliableDays`()
+BEGIN
+
+	SELECT *
+    FROM day_avaliable;
+    
+END $$
+
+DELIMITER ;
+/*-----------------------------------------------------------------------------*/
 DROP PROCEDURE IF EXISTS `AddOrder`;
 
 DELIMITER $$
@@ -470,8 +500,10 @@ USE `My_Database`$$
 CREATE PROCEDURE `AddOrder`(IN inputUserID INT, IN inputDay DATE, IN inputCost FLOAT, IN inputNotes VARCHAR(100))
 BEGIN
 
-   INSERT INTO `My_Database`.`orders` (`user_ID`,`date_time`, `total_cost`, `order_notes`,`is_active`) 
-   VALUES (inputUserID,inputDay, inputCost, inputNotes,true);
+	SELECT My_Database.UpdateSlots(inputDay);
+    
+	INSERT INTO `My_Database`.`orders` (`user_ID`,`date_time`, `total_cost`, `order_notes`,`is_active`) 
+	VALUES (inputUserID,inputDay, inputCost, inputNotes,true);
       
 END $$
 
@@ -491,7 +523,6 @@ BEGIN
 END $$
 
 DELIMITER ;
-
 
 /*-----------------------------------------------------------------------------*/
 DROP FUNCTION IF EXISTS `TotalProducts`;
@@ -668,6 +699,38 @@ BEGIN
 	RETURN num;
     
 END $$
+
+/*-----------------------------------------------------------------------------*/
+DROP FUNCTION IF EXISTS `TotalDays`;
+
+DELIMITER $$
+CREATE FUNCTION `TotalDays` () RETURNS INT DETERMINISTIC
+BEGIN
+
+	DECLARE total INT DEFAULT 0;
+    
+	SELECT COUNT(date_time) INTO total 
+    FROM day_avaliable;
+    
+	RETURN total;
+    
+END $$
+/*-----------------------------------------------------------------------------*/
+DROP FUNCTION IF EXISTS `UpdateSlots`;
+
+DELIMITER $$
+CREATE FUNCTION `UpdateSlots` (inputDate DATE) RETURNS BOOL DETERMINISTIC
+BEGIN
+
+	UPDATE day_avaliable
+    SET slots = slots - 1
+    WHERE date_time = inputDate && slots > 0;
+    
+	RETURN TRUE;
+    
+END $$
+/*-----------------------------------------------------------------------------*/
+
 
 
 
