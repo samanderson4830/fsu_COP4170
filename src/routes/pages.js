@@ -145,14 +145,46 @@ router.get('/admin-statistics', (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
 
     if (decoded.admin === true) {
-        res.render('admin_statistics', { 
-            title: 'Statistics', 
-            all_active: stats.total_active_orders, 
+        res.render('admin_statistics', {
+            title: 'Statistics',
+            all_active: stats.total_active_orders,
             all_inactive: stats.total_inactive_orders,
             total_users: stats.total_users,
             total_revenue: stats.total_revenue,
             total_potential_revenue: stats.total_potential_revenue
         });
+    } else {
+        res.render('error', { title: 'Error' });
+    }
+});
+
+router.get('/admin-product-quantity', (req, res) => {
+    var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+    var quanityArray = product.get_quantity();
+    if (decoded.admin === true) {
+        res.render('admin_product_quantity', { title: 'Product Quantity', products: quanityArray });
+    } else {
+        res.render('error', { title: 'Error' });
+    }
+});
+
+
+router.get('/admin-popular-product', (req, res) => {
+    var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+    var popularArray = product.get_popular();
+    if (decoded.admin === true) {
+        res.render('admin_popular_products', { title: 'Popular Products', products: popularArray });
+    } else {
+        res.render('error', { title: 'Error' });
+    }
+});
+
+
+router.get('/admin-all-users', (req, res) => {
+    var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+    var usersArray = user.get_all_users();
+    if (decoded.admin === true) {
+        res.render('admin_all_users', { title: 'Popular Products', users: usersArray });
     } else {
         res.render('error', { title: 'Error' });
     }

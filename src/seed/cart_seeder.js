@@ -63,7 +63,7 @@ function get_cost() {
             sum = sum + (cart[inx].price * cart[inx].amount);
         }
     }
-    return sum.toFixed(2);;
+    return sum.toFixed(2);
 }
 
 module.exports = {

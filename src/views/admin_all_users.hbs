@@ -1,0 +1,22 @@
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th scope="col">User ID</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            
+        </tr>
+    </thead>
+    {{#each users }}
+    <tbody>
+        <tr>
+            <td>{{ user_ID }}</td>
+            <td>{{ email }}</td>
+            <td>{{ phone_number }}</td>
+            <td>{{ address }}</td>
+        </tr>
+    </tbody>
+    {{/each}}
+</table>
+<a href="/admin-manager"> back</a>

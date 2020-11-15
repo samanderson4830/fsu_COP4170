@@ -26,7 +26,7 @@ const total_active_orders = () => {
 }
 
 var mytotalInactive = 0;
-const total_inactive_orders  = () => {
+const total_inactive_orders = () => {
 
     var sql = 'call My_Database.NumberOfAllInactive(@total);';
     db.start.query(sql, (err, results) => {
@@ -45,7 +45,7 @@ const total_inactive_orders  = () => {
 }
 //call My_Database.TotalNumberOfUsers(@total);
 var myTotalUsers = 0;
-const total_users  = () => {
+const total_users = () => {
 
     var sql = 'call My_Database.TotalNumberOfUsers(@total);';
     db.start.query(sql, (err, results) => {
@@ -64,7 +64,7 @@ const total_users  = () => {
 }
 
 var myTotalRevenue = 0;
-const total_revenue  = () => {
+const total_revenue = () => {
 
     var sql = 'call My_Database.GetTotalRevenue(@total);';
     db.start.query(sql, (err, results) => {
@@ -74,16 +74,19 @@ const total_revenue  = () => {
             throw err;
 
         } else {
-
-            myTotalRevenue = results[0][0].total;
+            if (results[0][0].total === null) {
+                myTotalRevenue = 0;
+            } else {
+                myTotalRevenue = results[0][0].total;
+            }
         }
     });
 
-    return myTotalRevenue;
+    return myTotalRevenue.toFixed(2);;
 }
 
 var myTotalPotentialRevenue = 0;
-const total_potential_revenue  = () => {
+const total_potential_revenue = () => {
 
     var sql = 'call My_Database.GetTotalPotentialRevenue(@total);';
     db.start.query(sql, (err, results) => {
@@ -93,12 +96,15 @@ const total_potential_revenue  = () => {
             throw err;
 
         } else {
-
-            myTotalPotentialRevenue = results[0][0].total;
+            if (results[0][0].total === null) {
+                myTotalPotentialRevenue = 0;
+            } else {
+                myTotalPotentialRevenue = results[0][0].total;
+            }
         }
     });
 
-    return myTotalPotentialRevenue;
+    return myTotalPotentialRevenue.toFixed(2);;
 }
 
 
