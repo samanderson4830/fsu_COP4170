@@ -557,6 +557,85 @@ BEGIN
 END $$
 
 DELIMITER ;
+/*-----------------------------------------------------------------------------*/
+
+# get number of products
+DROP PROCEDURE IF EXISTS `NumberOfAllInactive`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `NumberOfAllInactive`(OUT total INT)
+BEGIN
+
+	SET total = My_Database.CountInactiveOrders();
+    SELECT total;
+    
+END $$
+
+DELIMITER ;
+/*-----------------------------------------------------------------------------*/
+
+# get number of products
+DROP PROCEDURE IF EXISTS `NumberOfAllActive`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `NumberOfAllActive`(OUT total INT)
+BEGIN
+
+	SET total = My_Database.CountActiveOrders();
+    SELECT total;
+    
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `TotalNumberOfUsers`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `TotalNumberOfUsers`(OUT total FLOAT)
+BEGIN
+
+	SET total = My_Database.CountTotalUsers();
+    SELECT total;
+    
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+
+DROP PROCEDURE IF EXISTS `GetTotalRevenue`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `GetTotalRevenue`(OUT total FLOAT)
+BEGIN
+
+	SET total = My_Database.CountTotalRevenue();
+    SELECT total;
+    
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+
+DROP PROCEDURE IF EXISTS `GetTotalPotentialRevenue`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `GetTotalPotentialRevenue`(OUT total FLOAT)
+BEGIN
+
+	SET total = My_Database.CountTotalPotentialRevenue();
+    SELECT total;
+    
+END $$
+
+DELIMITER ;
 
 /*-----------------------------------------------------------------------------*/
 DROP FUNCTION IF EXISTS `TotalProducts`;
@@ -786,3 +865,82 @@ END $$
 
 /*-----------------------------------------------------------------------------*/
 
+DROP FUNCTION IF EXISTS `CountActiveOrders`;
+
+DELIMITER $$
+CREATE FUNCTION `CountActiveOrders` () RETURNS INT DETERMINISTIC
+BEGIN
+
+	DECLARE total INT DEFAULT 0;
+    
+	SELECT COUNT(order_ID) INTO total 
+    FROM activeorders;
+    
+	RETURN total;
+    
+END $$
+
+/*-----------------------------------------------------------------------------*/
+
+DROP FUNCTION IF EXISTS `CountInactiveOrders`;
+
+DELIMITER $$
+CREATE FUNCTION `CountInactiveOrders` () RETURNS INT DETERMINISTIC
+BEGIN
+
+	DECLARE total INT DEFAULT 0;
+    
+	SELECT COUNT(order_ID) INTO total 
+    FROM inactiveorders;
+    
+	RETURN total;
+    
+END $$
+/*-----------------------------------------------------------------------------*/
+
+DROP FUNCTION IF EXISTS `CountTotalUsers`;
+
+DELIMITER $$
+CREATE FUNCTION `CountTotalUsers` () RETURNS INT DETERMINISTIC
+BEGIN
+
+	DECLARE total INT DEFAULT 0;
+    
+	SELECT COUNT(user_ID) INTO total 
+    FROM users;
+    
+	RETURN total;
+    
+END $$
+/*-----------------------------------------------------------------------------*/
+
+DROP FUNCTION IF EXISTS `CountTotalRevenue`;
+
+DELIMITER $$
+CREATE FUNCTION `CountTotalRevenue` () RETURNS FLOAT DETERMINISTIC
+BEGIN
+
+	DECLARE total FLOAT DEFAULT 0;
+    
+	SELECT SUM(total_cost) INTO total 
+    FROM inactiveorders;
+    
+	RETURN total;
+    
+END $$
+/*-----------------------------------------------------------------------------*/
+
+DROP FUNCTION IF EXISTS `CountTotalPotentialRevenue`;
+
+DELIMITER $$
+CREATE FUNCTION `CountTotalPotentialRevenue` () RETURNS FLOAT DETERMINISTIC
+BEGIN
+
+	DECLARE total FLOAT DEFAULT 0;
+    
+	SELECT SUM(total_cost) INTO total 
+    FROM activeorders;
+    
+	RETURN total;
+    
+END $$
