@@ -13,3 +13,6 @@ https://www.youtube.com/watch?v=dSQ1CYLHWYM
 Login Page Set Up
 https://www.youtube.com/watch?v=VavWEtI5T7c
 
+Font Awesome icons
+https://fontawesome.com/v4.7.0/icons/
+

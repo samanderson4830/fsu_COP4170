@@ -71,7 +71,7 @@ router.get('/account-manager', authController.isLoggedIn, (req, res) => {
             title: 'Account Manager', user: user.get_user_info(userID), orders: orders.get_orders(userID),
         });
     } else {
-
+        res.render('admin_manager', { title: 'Account Manager', orders: orders.get_all_orders() });
     }
 });
 
@@ -138,6 +138,20 @@ router.get('/checkout', (req, res) => {
     var myDays = days.day_avaliable();
 
     res.render('checkout', { title: 'Checkout', user_cart: updatedCart, cost: user_cart.get_cost, days: myDays });
+});
+
+
+router.get('/admin-statistics', (req, res) => {
+    var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+    const userID = decoded.id;
+    var updatedCart = user_cart.populate_cart(userID);
+    var myDays = days.day_avaliable();
+
+    if (decoded.admin === true) {
+        res.render('admin_statistics', { title: 'Account Statistics' });
+    } else {
+        res.render('error', { title: 'Error' });
+    }
 });
 
 // exports
