@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `My_Database`.`users`
 # admin table
 CREATE TABLE IF NOT EXISTS `My_Database`.`admin` 
 (
-  `user_ID`       INT NOT NULL AUTO_INCREMENT UNIQUE,
+  `user_ID`       INT NOT NULL,
   `email`         VARCHAR(100) NOT NULL,
   `user_password` VARCHAR(500) NOT NULL,
   `address`       VARCHAR(100) NOT NULL,
@@ -150,8 +150,8 @@ CREATE PROCEDURE `AddAdmin`(IN input_email VARCHAR(100),
 						    IN input_about VARCHAR(1000))
 BEGIN
 	
-   INSERT INTO `My_Database`.`admin` ( `email`, `user_password`, `phone_number`, `address`,`ig_link`,`fb_link`,`twitter_link`, `about`) 
-   VALUES (input_email, input_password, input_phone_number, input_address, input_ig_link, input_fb_link, input_twitter_link, input_about);
+   INSERT INTO `My_Database`.`admin` ( `user_ID`,`email`, `user_password`, `phone_number`, `address`,`ig_link`,`fb_link`,`twitter_link`, `about`) 
+   VALUES (0,input_email, input_password, input_phone_number, input_address, input_ig_link, input_fb_link, input_twitter_link, input_about);
       
 END $$
 
@@ -370,7 +370,7 @@ USE `My_Database`$$
 CREATE PROCEDURE `NumberOfOrders`(IN inputUserID INT ,OUT total INT)
 BEGIN
 
-	SET total = My_Database.TotalOrders(inputUserID);
+	SET total = My_Database.TotalOrdersForUser(inputUserID);
     SELECT total;
     
 END $$
@@ -515,13 +515,45 @@ DROP PROCEDURE IF EXISTS `GetUserOrders`;
 
 DELIMITER $$
 USE `My_Database`$$
-CREATE PROCEDURE `GetUserOrders`(IN inID INT)
+CREATE PROCEDURE `GetUserOrders`(IN inputUserID INT)
 BEGIN
 
 	SELECT `total_cost`, `order_ID`, `is_active`, `date_time`, `placed_on`
 	FROM `orders`
-	WHERE user_ID = `inID`;
+	WHERE user_ID = `inputUserID`;
       
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `GetAllOrders`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `GetAllOrders`()
+BEGIN
+
+	SELECT *
+	FROM `orders`;
+      
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+
+# get number of products
+DROP PROCEDURE IF EXISTS `NumberOfAllOrders`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `NumberOfAllOrders`(OUT total INT)
+BEGIN
+
+	SET total = My_Database.TotalOrders();
+    SELECT total;
+    
 END $$
 
 DELIMITER ;
@@ -546,14 +578,14 @@ BEGIN
     
 END $$
 /*-----------------------------------------------------------------------------*/
-DROP FUNCTION IF EXISTS `TotalOrders`;
+DROP FUNCTION IF EXISTS `TotalOrdersForUser`;
 
 #*********************************************
 # Helper function for total num of orders  *
 #*********************************************
 
 DELIMITER $$
-CREATE FUNCTION `TotalOrders` (inputUserID INT) RETURNS INT DETERMINISTIC
+CREATE FUNCTION `TotalOrdersForUser` (inputUserID INT) RETURNS INT DETERMINISTIC
 BEGIN
 
 	DECLARE total INT DEFAULT 0;
@@ -733,5 +765,24 @@ BEGIN
 END $$
 /*-----------------------------------------------------------------------------*/
 
+DROP FUNCTION IF EXISTS `TotalOrders`;
 
+#*********************************************
+# Helper function for total num of orders  *
+#*********************************************
+
+DELIMITER $$
+CREATE FUNCTION `TotalOrders` () RETURNS INT DETERMINISTIC
+BEGIN
+
+	DECLARE total INT DEFAULT 0;
+    
+	SELECT COUNT(order_ID) INTO total 
+    FROM orders;
+    
+	RETURN total;
+    
+END $$
+
+/*-----------------------------------------------------------------------------*/
 
