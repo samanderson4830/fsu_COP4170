@@ -573,8 +573,8 @@ BEGIN
 END $$
 
 DELIMITER ;
-/*-----------------------------------------------------------------------------*/
 
+/*-----------------------------------------------------------------------------*/
 # get number of products
 DROP PROCEDURE IF EXISTS `NumberOfAllActive`;
 
@@ -622,7 +622,6 @@ END $$
 DELIMITER ;
 
 /*-----------------------------------------------------------------------------*/
-
 DROP PROCEDURE IF EXISTS `GetTotalPotentialRevenue`;
 
 DELIMITER $$
@@ -632,6 +631,37 @@ BEGIN
 
 	SET total = My_Database.CountTotalPotentialRevenue();
     SELECT total;
+    
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `GetPopularProducts`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `GetPopularProducts`()
+BEGIN
+
+	SELECT *
+	FROM products P
+	WHERE product_ID IN (SELECT product_ID 
+					    FROM popularproducts);
+    
+END $$
+
+DELIMITER ;
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `GetAllUsers`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `GetAllUsers`()
+BEGIN
+
+	SELECT *
+	FROM users;
     
 END $$
 
