@@ -2,21 +2,23 @@
 // modules used                               *
 //*********************************************/
 const express = require('express');
+const jwt = require('jsonwebtoken');
 
 /* files used */
-const product   = require('../seed/product_seeder');
-const user      = require('../seed/user_seeder')
-const orders    = require('../seed/orders_seeder');
-const cart      = require('../controllers/cart_controller');
+const authController = require('../controllers/login_controller');
+const product = require('../seed/product_seeder');
+const user = require('../seed/user_seeder')
+const orders = require('../seed/orders_seeder');
+const cart = require('../controllers/cart_controller');
 const user_cart = require('../seed/cart_seeder');
-const contact   = require('../seed/contact_seeder');
-const days      = require('../seed/days_seeder');
-const router    = express.Router();
+const contact = require('../seed/contact_seeder');
+const days = require('../seed/days_seeder');
+const router = express.Router();
 
 // Global Variables ****************************/
-const userID  = 1;
 const adminID = 1;
-const cartID  = 1;
+const cartID = 1;
+
 
 //*********************************************/
 // pages in use                               *
@@ -34,16 +36,18 @@ router.get('/register', (req, res) => {
 });
 
 router.get('/menu', (req, res) => {
-    res.render('menu', { title: 'Menu Page', products: product.get_products() });
+    res.render('menu', { title: 'Menu Page', products: product.get_products()});
 });
 
 router.get('/about', (req, res) => {
     var info = contact.get_contact_info(adminID);
- 
-    res.render('about', { title: 'About Page' , about: info[0].about });
+
+    res.render('about', { title: 'About Page', about: info[0].about });
 });
 
 router.get('/cart', (req, res) => {
+    var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+    const userID = decoded.id;
     var updatedCart = user_cart.populate_cart(userID);
 
     res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
@@ -53,7 +57,9 @@ router.get('/forgot-password', (req, res) => {
     res.render('forgot', { title: 'Forgot Password' });
 });
 
-router.get('/account-manager', (req, res) => {
+router.get('/account-manager', authController.isLoggedIn, (req, res) => {
+    var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+    const userID = decoded.id;
     res.render('manage_accout', {
         title: 'Account Manager', user: user.get_user_info(userID), orders: orders.get_orders(userID),
     });
@@ -64,7 +70,9 @@ router.get('/edit-account-info', (req, res) => {
 });
 
 router.get('/increment-amount/:id', (req, res) => {
-    console.log ("inc +++");
+    var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+    const userID = decoded.id;
+    console.log("inc +++");
     const productID = req.params.id;
     cart.increment_amount(cartID, productID)
     var updatedCart = user_cart.populate_cart(userID);
@@ -73,7 +81,9 @@ router.get('/increment-amount/:id', (req, res) => {
 });
 
 router.get('/decrement-amount/:id', (req, res) => {
-    console.log ("dec ---");
+    var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+    const userID = decoded.id;
+    console.log("dec ---");
     const productID = req.params.id;
     cart.decrement_amount(cartID, productID)
     var updatedCart = user_cart.populate_cart(userID);
@@ -82,6 +92,8 @@ router.get('/decrement-amount/:id', (req, res) => {
 });
 
 router.get('/add-to-cart/:id', (req, res) => {
+    var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+    const userID = decoded.id;
     const productID = req.params.id;
     cart.add_to_cart(cartID, productID)
     var updatedCart = user_cart.populate_cart(userID);
@@ -90,6 +102,8 @@ router.get('/add-to-cart/:id', (req, res) => {
 });
 
 router.get('/remove-from-cart/:id', (req, res) => {
+    var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+    const userID = decoded.id;
     const productID = req.params.id;
     console.log("Product --> " + productID);
     cart.remove(cartID, productID);
@@ -99,10 +113,12 @@ router.get('/remove-from-cart/:id', (req, res) => {
 });
 
 router.get('/checkout', (req, res) => {
+    var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+    const userID = decoded.id;
     var updatedCart = user_cart.populate_cart(userID);
     var myDays = days.day_avaliable();
-  
-    res.render('checkout', { title: 'Checkout', user_cart: updatedCart, cost: user_cart.get_cost, days: myDays});
+
+    res.render('checkout', { title: 'Checkout', user_cart: updatedCart, cost: user_cart.get_cost, days: myDays });
 });
 
 // exports

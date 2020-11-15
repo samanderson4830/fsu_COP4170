@@ -32,46 +32,48 @@ function get_orders(userID) {
 
     var total = total_orders(userID);
     var orders = new Array;
+    orders = [];
     var sql = 'call My_Database.GetUserOrders(\'' + userID + '\');';
-    db.start.query(sql,  (err, results) => {
-        if (err) {
+    if (total > 0) {
+        db.start.query(sql, (err, results) => {
+            if (err) {
 
-            throw err;
+                throw err;
 
-        } else {
+            } else {
 
-            // populate the order array with database      
-            var status;
-            for (var inx = 0; inx < total; ++inx) {
-                /* output for order status */
-                if (results[0][inx].is_active === 1) {
+                // populate the order array with database      
+                var status;
+                for (var inx = 0; inx < total; ++inx) {
+                    /* output for order status */
+                    if (results[0][inx].is_active === 1) {
 
-                    status = "Active";
-                } else {
+                        status = "Active";
+                    } else {
 
-                    status = "Inactive";
+                        status = "Inactive";
+                    }
+                    /* parse output for dates */
+                    var pick_up = results[0][inx].date_time;
+                    var placed = results[0][inx].placed_on;
+
+                    var temp = new String(pick_up);
+                    pick_up = parse_date(temp);
+
+                    var temp2 = new String(placed);
+                    placed = parse_date(temp2);
+
+                    orders.push({
+                        total_cost: results[0][inx].total_cost,
+                        order_ID: results[0][inx].order_ID,
+                        is_active: status,
+                        date_time: pick_up,
+                        placed_on: placed
+                    });
                 }
-                /* parse output for dates */
-                var pick_up = results[0][inx].date_time;
-                var placed = results[0][inx].placed_on;
-
-                var temp = new String(pick_up);
-                pick_up =  parse_date(temp);
-                
-                var temp2 = new String(placed);
-                placed =  parse_date(temp2);
-                
-                orders.push({
-                    total_cost: results[0][inx].total_cost,
-                    order_ID: results[0][inx].order_ID,
-                    is_active: status,
-                    date_time: pick_up,
-                    placed_on: placed
-                });
             }
-        }
-    });
-
+        });
+    }
     return orders;
 }
 

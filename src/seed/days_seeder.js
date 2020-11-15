@@ -42,11 +42,12 @@ function day_avaliable() {
                 var temp = results[0][inx].date_time;
                 var date = new String(temp);
                 date = parse_date(date);
-
-                days.push({
-                    slots: results[0][inx].slots,
-                    date_time: date,
-                });
+                if (results[0][inx].slots > 0) {
+                    days.push({
+                        slots: results[0][inx].slots,
+                        date_time: date,
+                    });
+                }
             }
         }
     });
