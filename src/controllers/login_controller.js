@@ -47,7 +47,48 @@ exports.login = async (req, res) => {
                         console.log("Cart was made");
                     }
                 });
-                const token = jwt.sign({ id: userID }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+                const token = jwt.sign({ id: userID, admin: false }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+
+                const cookieOpt = {
+
+                    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
+                    httpOnlyt: true
+
+                }
+
+                // if successfull login go back to home page
+                res.cookie('jwt', token, cookieOpt);
+                res.status(200).redirect('/');
+            }
+        });
+
+        /* attempt to login as admin*/
+        sql = 'SELECT user_ID, email, user_password FROM admin WHERE email = ?';
+        db.start.query(sql, [login_email], async (error, results) => {
+
+            console.log(results);
+            // temporaly removing hashing 
+            // const match = await bcrypt.compare(login_password, results[0].user_password);
+            // if (!results || !match)
+
+            if (login_password != results[0].user_password) {
+
+                return res.status(401).render('login', { message: 'Email or password is wrong' });
+
+            } else {
+
+                const userID = results[0].user_ID;
+                sql = "call My_Database.MakeCart(?);";
+                db.start.query(sql, [userID], (error, results) => {
+                    if (error) {
+
+                        console.log("Cart not made");
+                    } else {
+
+                        console.log("Cart was made");
+                    }
+                });
+                const token = jwt.sign({ id: userID, admin: true }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
                 const cookieOpt = {
 
