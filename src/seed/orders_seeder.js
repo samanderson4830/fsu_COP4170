@@ -32,7 +32,7 @@ function total_orders(userID) {
 
 /* get the get number of order in the db */
 var allTotal = 0;
-function all_total_orders(userID) {
+function all_total_orders() {
 
     var sql = 'call My_Database.NumberOfAllOrders(@total);';
     db.start.query(sql, (err, results) => {

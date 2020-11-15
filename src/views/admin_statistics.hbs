@@ -15,7 +15,7 @@
                     </div>
                     <div class="wrimagecard-topimage_title">
                         <h4>Total Revenue
-                            <div class="pull-right badge">18</div>
+                            <div class="pull-right badge">$ {{total_revenue}}</div>
                         </h4>
                     </div>
                 </a>
@@ -26,11 +26,11 @@
                 <a href="#">
                     <div class="wrimagecard-topimage_header" style="background-color: rgba(22, 160, 133, 0.1)">
                         <i class="fa fa-users" style="color:#16A085"></i></i>
-                        
+
                     </div>
                     <div class="wrimagecard-topimage_title">
                         <h4>Total Users
-                            <div class="pull-right badge" id="WrControls"></div>
+                             <div class="pull-right badge">{{total_users}}</div>
                         </h4>
                     </div>
                 </a>
@@ -38,33 +38,28 @@
         </div>
         <div class="col-md-3 col-sm-4">
             <div class="wrimagecard wrimagecard-topimage">
-                <a href="#">
-                    
-                    <div class="wrimagecard-topimage_header" style="background-color:  rgba(213, 15, 37, 0.1)">
-                        <i class="fa fa-exclamation-triangle" style="color:#d50f25"> </i>
-                    </div>
-                    <div class="wrimagecard-topimage_title">
-                        <h4>Active Orders
-                            <div class="pull-right badge" id="WrForms"></div>
-                        </h4>
-                    </div>
 
-                </a>
+                <div class="wrimagecard-topimage_header" style="background-color:  rgba(213, 15, 37, 0.1)">
+                    <i class="fa fa-exclamation-triangle" style="color:#d50f25"> </i>
+                </div>
+                <div class="wrimagecard-topimage_title">
+                    <h4>Active Orders
+                        <div class="pull-right badge">{{all_active}}</div>
+                    </h4>
+                </div>
             </div>
         </div>
         <div class="col-md-3 col-sm-4">
             <div class="wrimagecard wrimagecard-topimage">
-                <a href="#">
-                    <div class="wrimagecard-topimage_header" style="background-color:  rgba(51, 105, 232, 0.1)">
-                        <i class="fa fa-thumbs-up" style="color:#3369e8"> </i>
-                    </div>
-                    <div class="wrimagecard-topimage_title">
-                        <h4>Inactive Orders
-                            <div class="pull-right badge" id="WrGridSystem"></div>
-                        </h4>
-                    </div>
 
-                </a>
+                <div class="wrimagecard-topimage_header" style="background-color:  rgba(51, 105, 232, 0.1)">
+                    <i class="fa fa-thumbs-up" style="color:#3369e8"> </i>
+                </div>
+                <div class="wrimagecard-topimage_title">
+                    <h4>Inactive Orders
+                        <div class="pull-right badge">{{all_inactive}}</div>
+                    </h4>
+                </div>
             </div>
         </div>
         <div class="col-md-3 col-sm-4">
@@ -75,7 +70,7 @@
                     </div>
                     <div class="wrimagecard-topimage_title">
                         <h4>Potential Revenue
-                            <div class="pull-right badge" id="WrInformation"></div>
+                             <div class="pull-right badge">$ {{total_potential_revenue}}</div>
                         </h4>
                     </div>
 
@@ -89,7 +84,7 @@
                         <i class="fa fa-balance-scale" style="color:#795a47"> </i>
                     </div>
                     <div class="wrimagecard-topimage_title">
-                        <h4>Check Product Quatity 
+                        <h4>Check Product Quatity
                             <div class="pull-right badge" id="WrNavigation"></div>
                         </h4>
                     </div>
@@ -111,7 +106,7 @@
                 </a>
             </div>
         </div>
-                <div class="col-md-3 col-sm-4">
+        <div class="col-md-3 col-sm-4">
             <div class="wrimagecard wrimagecard-topimage">
                 <a href="#">
                     <div class="wrimagecard-topimage_header" style="background-color: #e0e0eb">

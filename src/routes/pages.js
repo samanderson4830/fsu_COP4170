@@ -13,6 +13,7 @@ const cart = require('../controllers/cart_controller');
 const user_cart = require('../seed/cart_seeder');
 const contact = require('../seed/contact_seeder');
 const days = require('../seed/days_seeder');
+const stats = require('../seed/stats_seeder');
 const router = express.Router();
 
 // Global Variables ****************************/
@@ -93,7 +94,6 @@ router.get('/edit-account-info', (req, res) => {
 router.get('/increment-amount/:id', (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
     const userID = decoded.id;
-    console.log("inc +++");
     const productID = req.params.id;
     cart.increment_amount(cartID, productID)
     var updatedCart = user_cart.populate_cart(userID);
@@ -143,12 +143,16 @@ router.get('/checkout', (req, res) => {
 
 router.get('/admin-statistics', (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
-    const userID = decoded.id;
-    var updatedCart = user_cart.populate_cart(userID);
-    var myDays = days.day_avaliable();
 
     if (decoded.admin === true) {
-        res.render('admin_statistics', { title: 'Account Statistics' });
+        res.render('admin_statistics', { 
+            title: 'Statistics', 
+            all_active: stats.total_active_orders, 
+            all_inactive: stats.total_inactive_orders,
+            total_users: stats.total_users,
+            total_revenue: stats.total_revenue,
+            total_potential_revenue: stats.total_potential_revenue
+        });
     } else {
         res.render('error', { title: 'Error' });
     }

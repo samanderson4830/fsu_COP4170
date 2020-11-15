@@ -16,3 +16,5 @@ https://www.youtube.com/watch?v=VavWEtI5T7c
 Font Awesome icons
 https://fontawesome.com/v4.7.0/icons/
 
+More bootstrap 4 icons
+https://getbootstrap.com/docs/3.3/components/
