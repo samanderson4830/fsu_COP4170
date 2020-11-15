@@ -33,6 +33,13 @@ call My_Database.AddDay('2000-05-05', 10);
 
 # add an order
 call My_Database.AddOrder(1,'2000-05-05', 12.12, "No notes ...");
-
+call My_Database.AddOrder(1,'2000-05-05', 12.12, "No notes ...");
+call My_Database.AddOrder(1,'2000-05-05', 12.12, "No notes ...");
+call My_Database.AddOrder(1,'2000-05-05', 12.12, "No notes ...");
+call My_Database.AddOrder(1,'2000-05-05', 12.12, "No notes ...");
+call My_Database.AddOrder(1,'2000-05-05', 12.12, "No notes ...");
+call My_Database.AddOrder(1,'2000-05-05', 12.12, "No notes ...");
+call My_Database.AddOrder(1,'2000-05-05', 12.12, "No notes ...");
+call My_Database.AddOrder(1,'2000-05-05', 12.12, "No notes ...");
 
 
