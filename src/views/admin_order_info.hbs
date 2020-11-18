@@ -1,0 +1,19 @@
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th scope="col">Order ID</th>
+            <th scope="col">Product ID</th>
+            <th scope="col">Quantity</th>
+        </tr>
+    </thead>
+    {{#each order }}
+    <tbody>
+        <tr>
+            <td>{{ order_ID }}</td>
+            <td>{{ product_ID }}</td>
+            <td>{{ amount }}</td>
+        </tr>
+    </tbody>
+    {{/each}}
+</table>
+<a href="/admin-manager"> back</a>

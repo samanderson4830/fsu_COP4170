@@ -104,7 +104,7 @@ function get_orders(userID) {
 }
 
 /* order info fro all users */
-function get_all_orders (){
+function get_all_orders() {
     var total = all_total_orders();
     var allOrders = new Array;
     allOrders = [];
@@ -154,11 +154,47 @@ function get_all_orders (){
     return allOrders;
 }
 
+function get_order_products() {
+
+    var productsInOrder = new Array;
+    productsInOrder = [];
+    var sql = 'SELECT * FROM order_has;';
+
+    db.start.query(sql, (err, results) => {
+        if (err) {
+
+            throw err;
+
+        } else {
+
+            // populate productsInOrderarray with database      
+            // for (var inx = 0; inx < results.length; ++inx) {
+            //     productsInOrder.push({
+            //         order_ID: results[0][inx].order_ID,
+            //         amount: results[0][inx].amount,
+            //         product_ID: results[0][inx].product_ID,
+            //     });
+            // }
+            for (x in results) {
+                console.log(results[x])
+                productsInOrder.push({
+                    order_ID: results[x].order_ID,
+                    amount: results[x].amount,
+                    product_ID: results[x].product_ID
+                });
+              }
+        }
+    });
+
+    return productsInOrder;
+}
+
 function parse_date(str) {
     return str.substr(0, 15);
 }
 
 module.exports = {
     get_orders,
-    get_all_orders
+    get_all_orders,
+    get_order_products
 }

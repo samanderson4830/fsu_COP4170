@@ -17,9 +17,8 @@ const stats = require('../seed/stats_seeder');
 const router = express.Router();
 
 // Global Variables ****************************/
-const adminID = 1;
-const cartID = 1;
-
+const adminID = 0; 
+ /* NOTE: userID and cartID are the same */
 
 //*********************************************/
 // pages in use                               *
@@ -78,8 +77,7 @@ router.get('/account-manager', authController.isLoggedIn, (req, res) => {
 
 router.get('/admin-manager', authController.isLoggedIn, (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
-    const userID = decoded.id;
-    console.log("Is Admin??? --> " + decoded.admin)
+
     if (decoded.admin === true) {
         res.render('admin_manager', { title: 'Account Manager' });
     } else {
@@ -95,7 +93,8 @@ router.get('/increment-amount/:id', (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
     const userID = decoded.id;
     const productID = req.params.id;
-    cart.increment_amount(cartID, productID)
+   
+    cart.increment_amount(userID, productID)
     var updatedCart = user_cart.populate_cart(userID);
 
     res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
@@ -105,7 +104,8 @@ router.get('/decrement-amount/:id', (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
     const userID = decoded.id;
     const productID = req.params.id;
-    cart.decrement_amount(cartID, productID)
+
+    cart.decrement_amount(userID, productID)
     var updatedCart = user_cart.populate_cart(userID);
 
     res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
@@ -115,7 +115,7 @@ router.get('/add-to-cart/:id', (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
     const userID = decoded.id;
     const productID = req.params.id;
-    cart.add_to_cart(cartID, productID)
+    cart.add_to_cart(userID, productID)
     var updatedCart = user_cart.populate_cart(userID);
 
     res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
@@ -125,7 +125,7 @@ router.get('/remove-from-cart/:id', (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
     const userID = decoded.id;
     const productID = req.params.id;
-    cart.remove(cartID, productID);
+    cart.remove(userID, productID);
     var updatedCart = user_cart.populate_cart(userID);
 
     res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
@@ -179,12 +179,21 @@ router.get('/admin-popular-product', (req, res) => {
     }
 });
 
-
 router.get('/admin-all-users', (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
     var usersArray = user.get_all_users();
     if (decoded.admin === true) {
         res.render('admin_all_users', { title: 'Popular Products', users: usersArray });
+    } else {
+        res.render('error', { title: 'Error' });
+    }
+});
+
+router.get('/admin-order-info', (req, res) => {
+    var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+    var arrayOrders = orders.get_order_products();
+    if (decoded.admin === true) {
+        res.render('admin_order_info', { title: 'Order Info' , order: arrayOrders});
     } else {
         res.render('error', { title: 'Error' });
     }
