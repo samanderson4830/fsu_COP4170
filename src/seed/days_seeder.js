@@ -20,7 +20,6 @@ function total_days() {
         } else {
 
             mytotal = results[0][0].total;
-            console.log
         }
     });
 

@@ -56,7 +56,28 @@ function get_all_users() {
     return usersArray;
 }
 
+//*********************************************/
+var myCartID = 0;
+function get_user_cartID(user_ID) {
+    
+    var sql = 'call My_Database.FindCartID(\'' + user_ID + '\');';
+    db.start.query(sql, async(err, results) => {
+        if (err) {
+
+            throw err;
+
+        } else {
+    
+            myCartID = await results[0][0].cart_ID;
+
+        }
+    });
+    console.log("myCart ->> " + myCartID);
+    return myCartID;
+}
+
 module.exports = {
     get_user_info,
-    get_all_users
+    get_all_users,
+    get_user_cartID
 }

@@ -2,23 +2,24 @@
 // modules used                               *
 //*********************************************/
 const express = require('express');
-const jwt = require('jsonwebtoken');
+const jwt     = require('jsonwebtoken');
 
 /* files used */
 const authController = require('../controllers/login_controller');
-const product = require('../seed/product_seeder');
-const user = require('../seed/user_seeder')
-const orders = require('../seed/orders_seeder');
-const cart = require('../controllers/cart_controller');
-const user_cart = require('../seed/cart_seeder');
-const contact = require('../seed/contact_seeder');
-const days = require('../seed/days_seeder');
-const stats = require('../seed/stats_seeder');
+const product        = require('../seed/product_seeder');
+const user           = require('../seed/user_seeder')
+const orders         = require('../seed/orders_seeder');
+const cart           = require('../controllers/cart_controller');
+const user_cart      = require('../seed/cart_seeder');
+const contact        = require('../seed/contact_seeder');
+const days           = require('../seed/days_seeder');
+const stats          = require('../seed/stats_seeder');
+
 const router = express.Router();
 
 // Global Variables ****************************/
 const adminID = 0; 
- /* NOTE: userID and cartID are the same */
+
 
 //*********************************************/
 // pages in use                               *
@@ -65,7 +66,7 @@ router.get('/forgot-password', (req, res) => {
 router.get('/account-manager', authController.isLoggedIn, (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
     const userID = decoded.id;
-    console.log("Is Admin??? --> " + decoded.admin)
+
     if (decoded.admin === false) {
         res.render('manage_accout', {
             title: 'Account Manager', user: user.get_user_info(userID), orders: orders.get_orders(userID),
@@ -93,8 +94,10 @@ router.get('/increment-amount/:id', (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
     const userID = decoded.id;
     const productID = req.params.id;
+    var cartID = user.get_user_cartID(userID);
+    console.log("CartID --> " + cartID);
    
-    cart.increment_amount(userID, productID)
+    cart.increment_amount(1, productID)
     var updatedCart = user_cart.populate_cart(userID);
 
     res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
@@ -104,8 +107,10 @@ router.get('/decrement-amount/:id', (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
     const userID = decoded.id;
     const productID = req.params.id;
+    var cartID = user.get_user_cartID(userID);
+    console.log("CartID --> " + cartID);
 
-    cart.decrement_amount(userID, productID)
+    cart.decrement_amount(1, productID)
     var updatedCart = user_cart.populate_cart(userID);
 
     res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
@@ -115,7 +120,9 @@ router.get('/add-to-cart/:id', (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
     const userID = decoded.id;
     const productID = req.params.id;
-    cart.add_to_cart(userID, productID)
+    var cartID = user.get_user_cartID(userID);
+    console.log("CartID --> " + cartID);
+    cart.add_to_cart(1, productID)
     var updatedCart = user_cart.populate_cart(userID);
 
     res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
@@ -125,7 +132,9 @@ router.get('/remove-from-cart/:id', (req, res) => {
     var decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
     const userID = decoded.id;
     const productID = req.params.id;
-    cart.remove(userID, productID);
+    var cartID = user.get_user_cartID(userID);
+    console.log("CartID --> " + cartID);
+    cart.remove(1, productID);
     var updatedCart = user_cart.populate_cart(userID);
 
     res.render('cart', { title: 'Shopping Cart', user_cart: updatedCart, cost: user_cart.get_cost });
