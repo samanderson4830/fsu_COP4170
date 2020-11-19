@@ -652,6 +652,7 @@ BEGIN
 END $$
 
 DELIMITER ;
+
 /*-----------------------------------------------------------------------------*/
 DROP PROCEDURE IF EXISTS `GetAllUsers`;
 
@@ -666,6 +667,38 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `FindCartID`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `FindCartID`(IN inputUserID INT)
+BEGIN
+
+	SELECT cart_ID
+	FROM cart
+    WHERE user_ID = inputUserID;
+    
+END $$
+
+DELIMITER ;
+
+/*-----------------------------------------------------------------------------*/
+DROP PROCEDURE IF EXISTS `GetOrderProducts`;
+
+DELIMITER $$
+USE `My_Database`$$
+CREATE PROCEDURE `GetOrderProducts`()
+BEGIN
+
+	SELECT *
+	FROM order_has;
+    
+END $$
+
+DELIMITER ;
+
 
 /*-----------------------------------------------------------------------------*/
 DROP FUNCTION IF EXISTS `TotalProducts`;
@@ -974,3 +1007,4 @@ BEGIN
 	RETURN total;
     
 END $$
+
