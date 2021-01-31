@@ -1,55 +1,48 @@
 //*********************************************/
 // modules used                               *
 //*********************************************/
-
-/* files used */
 const db = require('../model/db_connection');
 
 //*********************************************/
 
 /* create empty arrays used in populate_cart */
-var cart = new Array;
-var total = 0;
+let cart = new Array();
+let total = 0;
+
 function total_items(userID) {
     // console.log("cart seeder total!!");
-    var sql = 'call My_Database.NumberOfItemsInCart(?, @total);';
+    let sql = 'call My_Database.NumberOfItemsInCart(?, @total);';
     db.start.query(sql, [userID], (err, result) => {
         if (err) {
             throw err;
-
         } else {
             total = result[0][0].total;
+            console.log("total is -> " + result[0][0].total)
         }
     });
-
     return total;
 }
 
-function populate_cart(userID) {
-
+async function populate_cart(userID) {
+    /* empty cart array and get total */
     cart = [];
-    var total = total_items(userID);
-    console.log("Data found ..... " + total);
+    let total = total_items(userID);
 
     if (total > 0 && cart.length === 0) {
-        var sql = 'call My_Database.PopulateCart(\'' + userID + '\');';
-        db.start.query(sql, async (err, result) => {
-
+        let sql = 'call My_Database.PopulateCart(?);';
+        db.start.query(sql, [userID], async (err, result) => {
             if (err) {
-
                 throw err;
             } else {
-                // add to items array
-                for (var inx = 0; inx < total; ++inx) {
-
+                await result;
+                for (let item of result[0]) {
                     cart.push({
-                        product_ID: result[0][inx].product_ID,
-                        product_name: result[0][inx].product_name,
-                        amount: result[0][inx].amount,
-                        price: result[0][inx].price
+                        product_ID: item.product_ID,
+                        product_name: item.product_name,
+                        amount: item.amount,
+                        price: item.price
                     });
                 }
-                console.log("Cart length is --> " + cart.length);
             }
         });
     }
@@ -57,9 +50,9 @@ function populate_cart(userID) {
 }
 
 function get_cost() {
-    var sum = 0;
+    let sum = 0;
     if (sum == 0) {
-        for (var inx = 0; inx < cart.length; ++inx) {
+        for (let inx = 0; inx < cart.length; ++inx) {
             sum = sum + (cart[inx].price * cart[inx].amount);
         }
     }

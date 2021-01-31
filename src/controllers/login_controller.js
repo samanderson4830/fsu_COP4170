@@ -26,7 +26,7 @@ exports.login = async (req, res) => {
         db.start.query(sql, [login_email], async (error, results) => {
 
             console.log(results);
-            // temporaly removing hashing 
+            // removing hashing 
             // const match = await bcrypt.compare(login_password, results[0].user_password);
             // if (!results || !match)
 
@@ -56,7 +56,7 @@ exports.login = async (req, res) => {
 
                 }
 
-                // if successfull login go back to home page
+                // if successfully login go back to home page
                 res.cookie('jwt', token, cookieOpt);
                 res.status(200).redirect('/');
             }
@@ -67,7 +67,7 @@ exports.login = async (req, res) => {
         db.start.query(sql, [login_email], async (error, results) => {
 
             console.log(results);
-            // temporaly removing hashing 
+            // removing hashing 
             // const match = await bcrypt.compare(login_password, results[0].user_password);
             // if (!results || !match)
 
@@ -97,7 +97,7 @@ exports.login = async (req, res) => {
 
                 }
 
-                // if successfull login go back to home page
+                // if successfully login go back to home page
                 res.cookie('jwt', token, cookieOpt);
                 res.status(200).redirect('/');
             }

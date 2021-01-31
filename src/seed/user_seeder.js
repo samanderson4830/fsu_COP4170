@@ -8,17 +8,12 @@ const stats = require('../seed/stats_seeder');
 
 //*********************************************/
 function get_user_info(userID) {
-
-    var user = new Array;
-    var sql = 'call My_Database.GetUserInfo(\'' + userID + '\');';
-    db.start.query(sql, (err, results) => {
-
+    let user = new Array;
+    let sql = 'call My_Database.GetUserInfo(?);';
+    db.start.query(sql, [userID],(err, results) => {
         if (err) {
-
             throw err;
-
         } else {
-
             user.push({
                 email: results[0][0].email,
                 address: results[0][0].address,
@@ -30,20 +25,17 @@ function get_user_info(userID) {
 }
 
 //*********************************************/
-function get_all_users() {
+async function get_all_users() {
 
-    var total = stats.total_users();
-    var usersArray = new Array;
-    var sql = 'call My_Database.GetAllUsers();';
+    let total = stats.total_users();
+    let usersArray = new Array ();
+    let sql = 'call My_Database.GetAllUsers();';
 
     db.start.query(sql, (err, results) => {
-
         if (err) {
-
             throw err;
-
         } else {
-            for (var inx = 0; inx < total; ++inx) {
+            for (let inx = 0; inx < total; ++inx) {
                 usersArray.push({
                     user_ID: results[0][0].user_ID,
                     email: results[0][0].email,
@@ -57,19 +49,15 @@ function get_all_users() {
 }
 
 //*********************************************/
-var myCartID = 0;
+let myCartID = 0;
 function get_user_cartID(user_ID) {
     
     var sql = 'call My_Database.FindCartID(\'' + user_ID + '\');';
     db.start.query(sql, async(err, results) => {
         if (err) {
-
             throw err;
-
         } else {
-    
             myCartID = await results[0][0].cart_ID;
-
         }
     });
     console.log("myCart ->> " + myCartID);

@@ -1,78 +1,57 @@
 //*********************************************/
 // modules used                               *
 //*********************************************/
-
-/* files used */
 const db = require('../model/db_connection');
 
 //*********************************************/
-var mytotalActive = 0;
-const total_active_orders = () => {
-
-    var sql = 'call My_Database.NumberOfAllActive(@total);';
+let mytotalActive = 0;
+function total_active_orders () {
+    let sql = 'call My_Database.NumberOfAllActive(@total);';
     db.start.query(sql, (err, results) => {
-
         if (err) {
-
             throw err;
-
         } else {
-
             mytotalActive = results[0][0].total;
         }
     });
-
     return mytotalActive;
 }
 
-var mytotalInactive = 0;
-const total_inactive_orders = () => {
+let mytotalInactive = 0;
+function total_inactive_orders () {
 
-    var sql = 'call My_Database.NumberOfAllInactive(@total);';
+    let sql = 'call My_Database.NumberOfAllInactive(@total);';
     db.start.query(sql, (err, results) => {
-
         if (err) {
-
             throw err;
-
         } else {
-
             mytotalInactive = results[0][0].total;
         }
     });
-
     return mytotalInactive;
 }
 //call My_Database.TotalNumberOfUsers(@total);
-var myTotalUsers = 0;
-const total_users = () => {
+let myTotalUsers = 0;
+async function total_users () {
 
-    var sql = 'call My_Database.TotalNumberOfUsers(@total);';
+    let sql = 'call My_Database.TotalNumberOfUsers(@total);';
     db.start.query(sql, (err, results) => {
-
         if (err) {
-
             throw err;
-
         } else {
-
             myTotalUsers = results[0][0].total;
         }
     });
-
     return myTotalUsers;
 }
 
-var myTotalRevenue = 0;
-const total_revenue = () => {
+let myTotalRevenue = 0;
+function total_revenue () {
 
-    var sql = 'call My_Database.GetTotalRevenue(@total);';
+    let sql = 'call My_Database.GetTotalRevenue(@total);';
     db.start.query(sql, (err, results) => {
-
         if (err) {
-
             throw err;
-
         } else {
             if (results[0][0].total === null) {
                 myTotalRevenue = 0;
@@ -81,20 +60,15 @@ const total_revenue = () => {
             }
         }
     });
-
     return myTotalRevenue.toFixed(2);;
 }
 
-var myTotalPotentialRevenue = 0;
-const total_potential_revenue = () => {
-
-    var sql = 'call My_Database.GetTotalPotentialRevenue(@total);';
+let myTotalPotentialRevenue = 0;
+function total_potential_revenue () {
+    let sql = 'call My_Database.GetTotalPotentialRevenue(@total);';
     db.start.query(sql, (err, results) => {
-
         if (err) {
-
             throw err;
-
         } else {
             if (results[0][0].total === null) {
                 myTotalPotentialRevenue = 0;
@@ -103,7 +77,6 @@ const total_potential_revenue = () => {
             }
         }
     });
-
     return myTotalPotentialRevenue.toFixed(2);;
 }
 

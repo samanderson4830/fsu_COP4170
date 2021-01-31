@@ -1,23 +1,19 @@
-// 
 //*********************************************/
 // modules used                               *
 //*********************************************/
-
-/* files used */
 const db = require('../model/db_connection');
 
 //*********************************************/
 /* create empty arrays used in populate_cart */
-var contactInfo = new Array;
-const get_contact_info = (userID) => {
-
-    var sql = 'call My_Database.GetContactInfo(\'' + userID + '\');';
-    db.start.query(sql, (err, result) => {
+let contactInfo = new Array ();
+function get_contact_info(userID) {
+    let sql = 'call My_Database.GetContactInfo(?);';
+    db.start.query(sql, [userID], async (err, result) => {
         if (err) {
             throw err;
-
         } else {
-           // console.log("About --> "+ result[0][0].about);
+            await result
+            // console.log("About --> "+ result[0][0].about);
             contactInfo.push({
                 about: result[0][0].about,
                 email: result[0][0].email,
@@ -25,13 +21,10 @@ const get_contact_info = (userID) => {
                 fb_link: result[0][0].fb_link,
                 twitter_link: result[0][0].twitter_link
             });
-
         }
     });
-
-    return contactInfo;
+    return  contactInfo;
 }
-
 
 module.exports = {
     get_contact_info,

@@ -5,7 +5,7 @@ const mysql = require('mysql');
 
 //*********************************************/
 function my_conn() {
-    var config = {
+    let config = {
         host: process.env.DATABASE_HOST,
         user: process.env.DATABASE_USER,
         password: process.env.DATABASE_PWD,
@@ -14,12 +14,12 @@ function my_conn() {
     return config;
 }
 
-var start = mysql.createConnection(my_conn());
+let start = mysql.createConnection(my_conn());
 
 // init database
-var pool = mysql.createPool(my_conn());
+let pool = mysql.createPool(my_conn());
 
-//Fetch data
+// fetch data
 function RunQuery(sql, callback) {
     pool.getConnection(function (err, conn) {
         if (err) {
@@ -41,6 +41,6 @@ function ShowErrors(err) {
 }
 
 module.exports = {
-   RunQuery: RunQuery,
+    RunQuery: RunQuery,
     start
 };
