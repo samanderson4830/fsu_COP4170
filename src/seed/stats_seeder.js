@@ -4,36 +4,34 @@
 const db = require('../model/db_connection');
 
 //*********************************************/
-let mytotalActive = 0;
+let myTotalActive = 0;
 function total_active_orders () {
     let sql = 'call My_Database.NumberOfAllActive(@total);';
     db.start.query(sql, (err, results) => {
         if (err) {
             throw err;
         } else {
-            mytotalActive = results[0][0].total;
+            myTotalActive = results[0][0].total;
         }
     });
-    return mytotalActive;
+    return myTotalActive;
 }
 
-let mytotalInactive = 0;
+let myTotalInactive = 0;
 function total_inactive_orders () {
-
     let sql = 'call My_Database.NumberOfAllInactive(@total);';
     db.start.query(sql, (err, results) => {
         if (err) {
             throw err;
         } else {
-            mytotalInactive = results[0][0].total;
+            myTotalInactive = results[0][0].total;
         }
     });
-    return mytotalInactive;
+    return myTotalInactive;
 }
 //call My_Database.TotalNumberOfUsers(@total);
 let myTotalUsers = 0;
-async function total_users () {
-
+function total_users () {
     let sql = 'call My_Database.TotalNumberOfUsers(@total);';
     db.start.query(sql, (err, results) => {
         if (err) {
@@ -47,7 +45,6 @@ async function total_users () {
 
 let myTotalRevenue = 0;
 function total_revenue () {
-
     let sql = 'call My_Database.GetTotalRevenue(@total);';
     db.start.query(sql, (err, results) => {
         if (err) {
@@ -79,7 +76,6 @@ function total_potential_revenue () {
     });
     return myTotalPotentialRevenue.toFixed(2);;
 }
-
 
 module.exports = {
     total_active_orders,
